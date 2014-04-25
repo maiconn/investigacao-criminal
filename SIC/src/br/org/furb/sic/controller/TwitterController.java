@@ -39,7 +39,8 @@ public class TwitterController {
 		    do {
 		    	result = twitter.search(query);
 		        List<Status> tweets = result.getTweets();
-		        for (Status tweet : tweets) {		        	
+		        for (Status tweet : tweets) {	
+		        	// Inserir na lista
 		            System.out.println("@" + tweet.getUser().getScreenName() + " |Description " + tweet.getUser().getDescription() + " - " + tweet.getText());
 		            if(v)
 		            	buscaUsuarioTimeLine(tweet.getUser().getId());
