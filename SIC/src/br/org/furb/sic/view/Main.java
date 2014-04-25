@@ -7,8 +7,9 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		TwitterController tc = new TwitterController();
+		TwitterController tc = new TwitterController();		
 		tc.buscaPalavraChave("Furb");
+		
 
 	}
 

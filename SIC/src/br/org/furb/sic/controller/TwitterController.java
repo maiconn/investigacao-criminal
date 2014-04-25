@@ -2,6 +2,7 @@ package br.org.furb.sic.controller;
 
 import java.util.List;
 
+import br.org.furb.sic.model.ListaTweets;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -30,21 +31,26 @@ public class TwitterController {
 		twitter = tf.getInstance();
 	}
 	
-	public void buscaPalavraChave(String palavra){		
+	public void buscaPalavraChave(String palavra) {		
 		 
 		try {
 		    Query query = new Query(palavra);
 		    QueryResult result;
-		    boolean v = true;
+		    //boolean v = true;
+		    ListaTweets lista = new ListaTweets();
+		    
 		    do {
 		    	result = twitter.search(query);
 		        List<Status> tweets = result.getTweets();
 		        for (Status tweet : tweets) {	
 		        	// Inserir na lista
+		        	lista.insereTweet(tweet);
+		        	/**
 		            System.out.println("@" + tweet.getUser().getScreenName() + " |Description " + tweet.getUser().getDescription() + " - " + tweet.getText());
 		            if(v)
 		            	buscaUsuarioTimeLine(tweet.getUser().getId());
 		            v = false;
+		            */
 		            
 		        }
 		    } while ((query = result.nextQuery()) != null);
@@ -53,6 +59,11 @@ public class TwitterController {
 		    te.printStackTrace();
 		    System.out.println("Failed to search tweets: " + te.getMessage());
 		    System.exit(-1);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Failed insert tweet: " + e.getMessage());
+			System.exit(-1);
 		}		
 		
 	}
