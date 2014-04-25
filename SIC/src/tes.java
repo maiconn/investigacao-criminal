@@ -27,14 +27,23 @@ public class tes {
 		    .setOAuthAccessTokenSecret(TWITTER_ACCESS_TOKEN_SECRET);
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		Twitter twitter = tf.getInstance();
+		int contador = 0; 
 		try {
 		    Query query = new Query("FURB");
 		    QueryResult result;
 		    do {
 		        result = twitter.search(query);
 		        List<Status> tweets = result.getTweets();
-		        for (Status tweet : tweets) {
-		            System.out.println("@" + tweet.getUser().getScreenName() + " - " + tweet.getText());
+		        for (Status tweet : tweets) {		        	
+		            System.out.println("@" + tweet.getUser().getScreenName() + " |Description " + tweet.getUser().getDescription() + " - " + tweet.getText());
+		            if (contador == 0){
+		            	List<Status> statusUser = twitter.getUserTimeline(tweet.getUser().getId());
+		            	for (Status status : statusUser){
+		            		System.out.println(status.getUser().getName() + ":" +
+		                            status.getText());
+		            	}
+		            	contador++;
+		            }
 		        }
 		    } while ((query = result.nextQuery()) != null);
 		    System.exit(0);
