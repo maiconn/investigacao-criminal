@@ -42,6 +42,7 @@ public class TwitterController {
 		    do {
 		    	result = twitter.search(query);
 		        List<Status> tweets = result.getTweets();
+		        // Se deixar rolar o foreach vai estourar excessão
 		        for (Status tweet : tweets) {	
 		        	// Inserir na lista
 		        	lista.insereTweet(tweet);
