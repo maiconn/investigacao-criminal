@@ -61,13 +61,20 @@ public class TwitterController {
 				}
 			} while ((query = result.nextQuery()) != null);
 
-			System.exit(0);
+			// System.exit(0);
 		} catch (TwitterException te) {
-			te.printStackTrace();
-			System.err.println("Failed to search tweets: " + te.getMessage());
+			if (te.getMessage().contains("code - 88")) {
+				System.err
+						.println("["
+								+ te.getClass().getName()
+								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
+			} else {
+				te.printStackTrace();
+				System.err.println("Failed to search tweets: "
+						+ te.getMessage());
+			}
 			System.exit(-1);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.err.println("Failed insert tweet: " + e.getMessage());
 			System.exit(-1);
@@ -90,20 +97,12 @@ public class TwitterController {
 					.getId());
 			if (!statusUser.isEmpty()) {
 				System.out.println("[Últimos 5 Tweets]");
-
-				// for (int i = 0; i < TWEETS_TIME_LINE; i++) {
-				// System.out.println(status.getText());
-				// count++;
-				// status = statusUser.get(count);
-				// }
-
-				// Status status = statusUser.get(count);
 				try {
 					int count = 0;
 					Status status = null;
 					while ((status = statusUser.get(count)) != null
 							&& count < TWEETS_TIME_LINE) {
-						System.out.println(status.getText());
+						System.out.println(" -> " + status.getText());
 						count++;
 					}
 				} catch (IndexOutOfBoundsException ex) {
@@ -111,9 +110,17 @@ public class TwitterController {
 				}
 			}
 		} catch (TwitterException te) {
-			te.printStackTrace();
-			System.err.println("Failed to search user timeline: "
-					+ te.getMessage());
+			if (te.getMessage().contains("code - 88")) {
+				System.err
+						.println("["
+								+ te.getClass().getName()
+								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
+			} else {
+				te.printStackTrace();
+				System.err.println("Failed to search tweets: "
+						+ te.getMessage());
+			}
+			System.exit(-1);
 		}
 		System.out.println();
 	}
