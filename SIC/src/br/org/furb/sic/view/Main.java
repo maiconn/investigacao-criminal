@@ -14,6 +14,8 @@ public class Main {
 		System.out.print("Digite a palavra desejada para ser pesquisada: ");
 		String pesquisa = scan.nextLine();
 		
+		System.out.println();
+		System.out.println("RESULTADOS");
 		
 		TwitterController tc = TwitterController.getInstance();
 		tc.buscaPalavraChave(pesquisa);

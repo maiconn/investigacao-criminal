@@ -1,5 +1,6 @@
 package br.org.furb.sic.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import br.org.furb.sic.model.ListaTweets;
@@ -84,13 +85,14 @@ public class TwitterController {
 	}
 
 	public void mostrarInformacoesUsuario(Status tweet) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		try {
 			System.out.println("Usuario: @" + tweet.getUser().getScreenName());
 			System.out
 					.println("Descrição: " + tweet.getUser().getDescription());
 			System.out.println("Localização: " + tweet.getUser().getLocation());
 			System.out.println("Nome: " + tweet.getUser().getName());
-			System.out.println(tweet.getCreatedAt().toString() + " - "
+			System.out.println(sdf.format(tweet.getCreatedAt()) + " - "
 					+ tweet.getText());
 
 			List<Status> statusUser = twitter.getUserTimeline(tweet.getUser()
