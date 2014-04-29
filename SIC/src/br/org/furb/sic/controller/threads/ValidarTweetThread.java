@@ -3,6 +3,7 @@ package br.org.furb.sic.controller.threads;
 import java.util.concurrent.Semaphore;
 
 import twitter4j.Status;
+import br.org.furb.sic.controller.TwitterController;
 import br.org.furb.sic.model.ListaTweetsValidos;
 import br.org.furb.sic.view.Main;
 
@@ -10,6 +11,7 @@ public class ValidarTweetThread extends Thread {
 	private Status tweet;
 	private ListaTweetsValidos listaTweetsValidos;
 	private Semaphore semaforo;
+	private TwitterController tc = TwitterController.getInstance();
 
 	public ValidarTweetThread(Status tweet,
 			ListaTweetsValidos listaTweetsValidos, Semaphore semaforo) {
@@ -24,8 +26,9 @@ public class ValidarTweetThread extends Thread {
 		// TODO Validação do tweet e encaminhamento para a Lista de válidos.
 
 		try {
-			listaTweetsValidos.adicionarTweetValido(tweet);
-
+			if (tc.isValidTweet(tweet)) {
+				listaTweetsValidos.adicionarTweetValido(tweet);
+			}
 			semaforo.release();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

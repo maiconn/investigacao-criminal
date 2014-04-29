@@ -1,9 +1,12 @@
 package br.org.furb.sic.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import br.org.furb.sic.model.ListaTweets;
+import br.org.furb.sic.util.StringUtil;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -21,6 +24,8 @@ public class TwitterController {
 	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
 	private static TwitterController instance;
+	
+	private List<String> palavrasChave;
 
 	public static TwitterController getInstance() {
 		if (instance == null) {
@@ -126,9 +131,18 @@ public class TwitterController {
 		}
 		System.out.println();
 	}
-
-	public boolean isValidTweet(String texto, String palavra) {
-		return false;
+	
+	public boolean isValidTweet(Status tweet) {
+		List<String> palavrasTweet = Arrays.asList(StringUtil.normalize(tweet.getText()).split(" "));
+		for(String palavra : palavrasChave){
+			if(!palavrasTweet.contains(palavra)){
+				return false;
+			}
+		}
+		return true;
+	}
+	public void setArrayPalavras(String[] arrayPalavras) {
+		this.palavrasChave = Arrays.asList(arrayPalavras);
 	}
 
 }
