@@ -42,8 +42,8 @@ public class ListaTweetsValidos {
 
 			lista.add(tweet);
 
-			Main.print(getClass(), "tamanho(" + lista.size()
-					+ ") adicionando tweet:" + tweet.getId());
+			Main.print("tamanho(" + lista.size() + ") adicionando tweet:"
+					+ tweet.getId());
 
 			podeRetirar.signal();
 		} finally {
@@ -58,7 +58,7 @@ public class ListaTweetsValidos {
 				podeRetirar.await();
 			}
 			Status tweet = lista.remove(0);
-			Main.print(getClass(), "tamanho(" + lista.size()
+			Main.print("tamanho(" + lista.size()
 					+ ") removedo tweet: " + tweet.getId());
 
 			podeAdicionar.signal();

@@ -30,21 +30,21 @@ public class ListaTweets {
 			wait();
 
 		lista.add(tweet);
-		Main.print(getClass(), "tamanho(" + lista.size()
+		Main.print("tamanho(" + lista.size()
 				+ ") adicionou tweet na ListaTweet: " + tweet.getId());
 
 		notifyAll();
 	}
 
 	public void finalizar() {
-		Main.print(getClass(), "finalizou a pesquisa de tweets.");
+		Main.print("finalizou a pesquisa de tweets.");
 		this.fimPesquisaTwitter = true;
 	}
 
 	public synchronized Status retirarTweet() {
 		if (!lista.isEmpty()) {
 			Status tweet = lista.remove(0);
-			Main.print(getClass(), "tamanho(" + lista.size()
+			Main.print("tamanho(" + lista.size()
 					+ ") removeu tweet da ListaTweet: " + tweet.getId());
 			notifyAll();
 			return tweet;

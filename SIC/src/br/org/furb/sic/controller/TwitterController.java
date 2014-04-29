@@ -23,7 +23,7 @@ public class TwitterController {
 	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
 	private static TwitterController instance;
-	
+
 	private List<String> palavrasChave;
 
 	public static TwitterController getInstance() {
@@ -43,10 +43,13 @@ public class TwitterController {
 		twitter = tf.getInstance();
 	}
 
-	public void buscaPalavraChave(String palavra) {
+	public void buscaPalavraChave(String pesquisa) {
+		this.palavrasChave = Arrays.asList(StringUtil
+				.normalizarPadronizarSepararString(pesquisa));
+		
 		ListaTweets lista = new ListaTweets();
 		try {
-			Query query = new Query(palavra);
+			Query query = new Query(pesquisa);
 			QueryResult result;
 
 			do {
@@ -130,19 +133,21 @@ public class TwitterController {
 		}
 		System.out.println();
 	}
-	
+
 	public boolean isValidTweet(Status tweet) {
-		List<String> palavrasTweet = Arrays.asList(StringUtil.normalize(tweet.getText()).split(" "));
-		for(String palavra : palavrasChave){
-			if(!palavrasTweet.contains(palavra)){
+		List<String> palavrasTweet = Arrays.asList(StringUtil
+				.normalizarPadronizarSepararString(tweet.getText()));
+		// if(Main.DEBUG){
+		// Main.print(getClass(),
+		// "palavras da pesquisa:"+palavrasChave.toString());
+		// Main.print(getClass(),
+		// "palavras do tweet:"+palavrasTweet.toString());
+		// }
+		for (String palavra : palavrasChave) {
+			if (!palavrasTweet.contains(palavra)) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
-	public void setArrayPalavras(String[] arrayPalavras) {
-		this.palavrasChave = Arrays.asList(arrayPalavras);
-	}
-
 }

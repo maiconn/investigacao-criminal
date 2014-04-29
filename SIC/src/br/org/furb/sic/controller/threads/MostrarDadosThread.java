@@ -18,14 +18,14 @@ public class MostrarDadosThread extends Thread {
 
 	@Override
 	public void run() {
-		Main.print(getClass(), "startou thread.");
+		Main.print("startou thread.");
 		while (!listaTweetsValidos.isFimDosTweets()
 				|| !listaTweetsValidos.getLista().isEmpty()) {
 			if (!listaTweetsValidos.getLista().isEmpty()) {
 				try {
 					qtdTweetsProcessados++;
 					Status tweet = listaTweetsValidos.retirarTweetValido();
-					Main.print(getClass(), "mostrando tweet para usuário: " + tweet.getId());
+					Main.print("mostrando tweet para usuário: " + tweet.getId());
 					if (!Main.DEBUG)
 						twitterController.mostrarInformacoesUsuario(tweet);
 
@@ -35,6 +35,6 @@ public class MostrarDadosThread extends Thread {
 			}
 		}
 
-		Main.print(getClass(), "quantidade de tweets processados: " + qtdTweetsProcessados);
+		Main.print("quantidade de tweets mostrados: " + qtdTweetsProcessados);
 	}
 }

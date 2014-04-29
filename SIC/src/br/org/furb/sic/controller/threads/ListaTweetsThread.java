@@ -27,7 +27,7 @@ public class ListaTweetsThread extends Thread {
 
 	@Override
 	public void run() {
-		Main.print(getClass(), "startou thread.");
+		Main.print("startou thread.");
 		while (!listaTweets.isFimPesquisaTwitter() || !listaTweets.vazia()) {
 			try {
 				if (!listaTweets.vazia()) {
@@ -46,7 +46,7 @@ public class ListaTweetsThread extends Thread {
 				e.printStackTrace();
 			}
 		}
-		Main.print(getClass(), "quantidade de tweets processados: " + qtdTweets);
+		Main.print("quantidade de tweets processados: " + qtdTweets);
 		listaTweetsValidos.finalizar();
 	}
 

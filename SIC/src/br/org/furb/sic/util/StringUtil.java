@@ -1,5 +1,6 @@
 package br.org.furb.sic.util;
 
+
 public class StringUtil {
 
 	/** Para a normalização dos caracteres de 32 a 255, primeiro caracter */
@@ -46,5 +47,14 @@ public class StringUtil {
 		}
 
 		return ret.toString();
+	}
+
+	private static final String PATTERN = "[^a-zA-Z0-9#@ _]";
+
+	public static String[] normalizarPadronizarSepararString(String str) {
+		String normalizar = normalize(str);
+		String padronizar = normalizar.toLowerCase().replaceAll(PATTERN, "");
+
+		return padronizar.split(" ");
 	}
 }
