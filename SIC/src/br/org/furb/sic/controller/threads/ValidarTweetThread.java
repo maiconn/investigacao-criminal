@@ -23,8 +23,6 @@ public class ValidarTweetThread extends Thread {
 	@Override
 	public void run() {
 		Main.print(getClass(), "validando um tweet: " + tweet.getId());
-		// TODO Validação do tweet e encaminhamento para a Lista de válidos.
-
 		try {
 			if (tc.isValidTweet(tweet)) {
 				listaTweetsValidos.adicionarTweetValido(tweet);

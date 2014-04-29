@@ -1,12 +1,9 @@
 package br.org.furb.sic.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import br.org.furb.sic.model.ListaTweets;
-import br.org.furb.sic.util.StringUtil;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -14,6 +11,8 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import br.org.furb.sic.model.ListaTweets;
+import br.org.furb.sic.util.StringUtil;
 
 public class TwitterController {
 
@@ -141,6 +140,7 @@ public class TwitterController {
 		}
 		return true;
 	}
+	
 	public void setArrayPalavras(String[] arrayPalavras) {
 		this.palavrasChave = Arrays.asList(arrayPalavras);
 	}
