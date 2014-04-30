@@ -22,13 +22,6 @@ public class Main {
 		tc.buscaPalavraChave(pesquisa);
 	}
 
-	@Deprecated
-	public static void print(Class<?> clazz, String msg) {
-		if (DEBUG) {
-			System.out.println("[" + clazz.getSimpleName() + "] " + msg);
-		}
-	}
-
 	public static void print(String msg) {
 		if (DEBUG) {
 			Exception ex = new Exception();
