@@ -8,11 +8,11 @@ import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.util.StringUtil;
+import br.org.furb.sic.view.Main;
 
 public class TwitterController {
 
@@ -46,7 +46,7 @@ public class TwitterController {
 	public void buscaPalavraChave(String pesquisa) {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
-		
+
 		ListaTweets lista = new ListaTweets();
 		try {
 			Query query = new Query(pesquisa);
@@ -55,37 +55,12 @@ public class TwitterController {
 			do {
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
-				// Se deixar rolar o foreach vai estourar excessão
 				for (Status tweet : tweets) {
-					// Inserir na lista
 					lista.insereTweet(tweet);
-					/**
-					 * System.out.println("@" + tweet.getUser().getScreenName()
-					 * + " |Description " + tweet.getUser().getDescription() +
-					 * " - " + tweet.getText()); if(v)
-					 * buscaUsuarioTimeLine(tweet.getUser().getId()); v = false;
-					 */
-
 				}
 			} while ((query = result.nextQuery()) != null);
-
-			// System.exit(0);
-		} catch (TwitterException te) {
-			if (te.getMessage().contains("code - 88")) {
-				System.err
-						.println("["
-								+ te.getClass().getName()
-								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
-			} else {
-				te.printStackTrace();
-				System.err.println("Failed to search tweets: "
-						+ te.getMessage());
-			}
-			System.exit(-1);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			System.err.println("Failed insert tweet: " + e.getMessage());
-			System.exit(-1);
+		} catch (Exception ex) {
+			Main.tratarExcessao(ex);
 		} finally {
 			lista.finalizar();
 		}
@@ -118,19 +93,9 @@ public class TwitterController {
 
 				}
 			}
-		} catch (TwitterException te) {
-			if (te.getMessage().contains("code - 88")) {
-				System.err
-						.println("["
-								+ te.getClass().getName()
-								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
-			} else {
-				te.printStackTrace();
-				System.err.println("Failed to search tweets: "
-						+ te.getMessage());
-			}
-			System.exit(-1);
-		}
+		} catch (Exception ex) {
+			Main.tratarExcessao(ex);
+		} 
 		System.out.println();
 	}
 

@@ -42,8 +42,8 @@ public class ListaTweetsThread extends Thread {
 					
 					thread.start();
 				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (Exception ex) {
+				Main.tratarExcessao(ex);
 			}
 		}
 		Main.print("quantidade de tweets processados: " + qtdTweets);

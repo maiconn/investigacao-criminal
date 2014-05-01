@@ -41,16 +41,17 @@ public class ListaTweets {
 		this.fimPesquisaTwitter = true;
 	}
 
-	public synchronized Status retirarTweet() {
-		if (!lista.isEmpty()) {
-			Status tweet = lista.remove(0);
-			Main.print("tamanho(" + lista.size()
-					+ ") removeu tweet da ListaTweet: " + tweet.getId());
-			notifyAll();
-			return tweet;
+	public synchronized Status retirarTweet() throws InterruptedException {
+		if (lista.isEmpty()) {
+			wait();
 		}
 
-		return null;
+		Status tweet = lista.remove(0);
+		Main.print("tamanho(" + lista.size()
+				+ ") removeu tweet da ListaTweet: " + tweet.getId());
+		notifyAll();
+		return tweet;
+
 	}
 
 	public boolean isFimPesquisaTwitter() {

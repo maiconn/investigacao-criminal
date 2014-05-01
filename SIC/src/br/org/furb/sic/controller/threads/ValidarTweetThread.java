@@ -24,12 +24,12 @@ public class ValidarTweetThread extends Thread {
 	public void run() {
 		Main.print("validando um tweet: " + tweet.getId());
 		try {
-			if (tc.isValidTweet(tweet)) {
+			if (tc.isValidTweet(tweet) || Main.DEBUG) {
 				listaTweetsValidos.adicionarTweetValido(tweet);
 			}
 			semaforo.release();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			Main.tratarExcessao(ex);
 		}
 
 	}

@@ -29,8 +29,8 @@ public class MostrarDadosThread extends Thread {
 					if (!Main.DEBUG)
 						twitterController.mostrarInformacoesUsuario(tweet);
 
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} catch (Exception ex) {
+					Main.tratarExcessao(ex);
 				}
 			}
 		}

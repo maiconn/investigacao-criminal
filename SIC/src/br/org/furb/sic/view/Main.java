@@ -2,6 +2,7 @@ package br.org.furb.sic.view;
 
 import java.util.Scanner;
 
+import twitter4j.TwitterException;
 import br.org.furb.sic.controller.TwitterController;
 
 public class Main {
@@ -16,12 +17,16 @@ public class Main {
 
 		System.out.println();
 		System.out.println("RESULTADOS");
-		print("TESTE");
 
 		TwitterController tc = TwitterController.getInstance();
 		tc.buscaPalavraChave(pesquisa);
 	}
 
+	/**
+	 * Método que imprime as mensagens conforme a flag de DEBUG.
+	 * 
+	 * @param msg
+	 */
 	public static void print(String msg) {
 		if (DEBUG) {
 			Exception ex = new Exception();
@@ -29,6 +34,30 @@ public class Main {
 			String[] separator = stack[1].getClassName().split("\\.");
 			String simpleCassName = separator[separator.length - 1];
 			System.out.println("[" + simpleCassName + "] " + msg);
+		}
+	}
+
+	/**
+	 * Método que irá tratar as exceptions do sistema.
+	 * 
+	 * @param ex
+	 */
+	public static void tratarExcessao(Exception ex) {
+		if (ex instanceof TwitterException) {
+			TwitterException te = (TwitterException) ex;
+			if (te.getMessage().contains("code - 88")) {
+				System.err
+						.println("["
+								+ te.getClass().getName()
+								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
+			} else {
+				te.printStackTrace();
+				System.err.println("Failed to search tweets: "
+						+ te.getMessage());
+			}
+			System.exit(-1);
+		} else {
+			ex.printStackTrace();
 		}
 	}
 }
