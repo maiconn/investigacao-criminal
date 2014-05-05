@@ -2,24 +2,27 @@ package br.org.furb.sic.view;
 
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import twitter4j.TwitterException;
-import br.org.furb.sic.controller.TwitterController;
+import br.org.furb.sic.Config;
 
 public class Main {
-	public static final boolean DEBUG = false;
 
 	private static Scanner scan = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		System.out.println("SIC - Sistema de investigação criminal");
-		System.out.print("Digite a palavra desejada para ser pesquisada: ");
-		String pesquisa = scan.nextLine();
+		// System.out.println("SIC - Sistema de investigação criminal");
+		// System.out.print("Digite a palavra desejada para ser pesquisada: ");
+		// String pesquisa = scan.nextLine();
+		//
+		// System.out.println();
+		// System.out.println("RESULTADOS");
+		//
+		// TwitterController tc = TwitterController.getInstance();
+		// tc.buscaPalavraChave(pesquisa);
 
-		System.out.println();
-		System.out.println("RESULTADOS");
-
-		TwitterController tc = TwitterController.getInstance();
-		tc.buscaPalavraChave(pesquisa);
+		new InicialView();
 	}
 
 	/**
@@ -28,7 +31,7 @@ public class Main {
 	 * @param msg
 	 */
 	public static void print(String msg) {
-		if (DEBUG) {
+		if (Config.DEBUG) {
 			Exception ex = new Exception();
 			StackTraceElement[] stack = ex.getStackTrace();
 			String[] separator = stack[1].getClassName().split("\\.");
@@ -45,18 +48,26 @@ public class Main {
 	public static void tratarExcessao(Exception ex) {
 		if (ex instanceof TwitterException) {
 			TwitterException te = (TwitterException) ex;
+			te.printStackTrace();
 			if (te.getMessage().contains("code - 88")) {
-				System.err
-						.println("["
-								+ te.getClass().getName()
-								+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.");
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"["
+										+ te.getClass().getName()
+										+ "] Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.",
+								"TwitterException", JOptionPane.WARNING_MESSAGE);
 			} else {
 				te.printStackTrace();
-				System.err.println("Failed to search tweets: "
-						+ te.getMessage());
+				JOptionPane.showMessageDialog(null, "Failed to search tweets: "
+						+ te.getMessage(), "TwitterException",
+						JOptionPane.ERROR_MESSAGE);
 			}
-			System.exit(-1);
+//			System.exit(-1);
 		} else {
+			JOptionPane.showMessageDialog(null, "Erro: "
+					+ ex.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
 		}
 	}

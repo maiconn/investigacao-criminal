@@ -1,6 +1,7 @@
 package br.org.furb.sic.controller.threads;
 
 import twitter4j.Status;
+import br.org.furb.sic.Config;
 import br.org.furb.sic.controller.TwitterController;
 import br.org.furb.sic.model.ListaTweetsValidos;
 import br.org.furb.sic.view.Main;
@@ -19,20 +20,20 @@ public class MostrarDadosThread extends Thread {
 	@Override
 	public void run() {
 		Main.print("startou thread.");
-		while (!listaTweetsValidos.isFimDosTweets()
-				|| !listaTweetsValidos.getLista().isEmpty()) {
-			if (!listaTweetsValidos.getLista().isEmpty()) {
-				try {
+		try {
+			while (!listaTweetsValidos.isFimDosTweets()
+					|| !listaTweetsValidos.getLista().isEmpty()) {
+				if (!listaTweetsValidos.getLista().isEmpty()) {
 					qtdTweetsProcessados++;
 					Status tweet = listaTweetsValidos.retirarTweetValido();
 					Main.print("mostrando tweet para usuário: " + tweet.getId());
-					if (!Main.DEBUG)
+					if (!Config.DEBUG)
 						twitterController.mostrarInformacoesUsuario(tweet);
 
-				} catch (Exception ex) {
-					Main.tratarExcessao(ex);
 				}
 			}
+		} catch (Exception ex) {
+			Main.tratarExcessao(ex);
 		}
 
 		Main.print("quantidade de tweets mostrados: " + qtdTweetsProcessados);

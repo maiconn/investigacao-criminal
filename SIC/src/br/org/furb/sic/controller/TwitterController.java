@@ -8,23 +8,20 @@ import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import br.org.furb.sic.Config;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.util.StringUtil;
+import br.org.furb.sic.view.BuscaPalavrasChaveView;
 import br.org.furb.sic.view.Main;
 
 public class TwitterController {
-
-	private final String TWITTER_CONSUMER_KEY = "9wCm1u34L3pLVYnvOiFIKPHSi";
-	private final String TWITTER_SECRET_KEY = "SoqKvwPy2pi19twgc82qBENGOeuJhCkLQOXpebTbBYXkCdVNLk";
-	private final String TWITTER_ACCESS_TOKEN = "2460706994-2ztrCLNxNYe574qQJBJVQdVjlFm2bOI3yxA8cdO";
-	private final String TWITTER_ACCESS_TOKEN_SECRET = "qXt2Mm78vRTOahtWqyfqgVAWdpjH5augH6LztptZh5zQf";
-	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
-	private static TwitterController instance;
-
 	private List<String> palavrasChave;
+
+	private static TwitterController instance;
 
 	public static TwitterController getInstance() {
 		if (instance == null) {
@@ -35,15 +32,20 @@ public class TwitterController {
 
 	private TwitterController() {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey(TWITTER_CONSUMER_KEY)
-				.setOAuthConsumerSecret(TWITTER_SECRET_KEY)
-				.setOAuthAccessToken(TWITTER_ACCESS_TOKEN)
-				.setOAuthAccessTokenSecret(TWITTER_ACCESS_TOKEN_SECRET);
+		cb.setDebugEnabled(true)
+				.setOAuthConsumerKey(
+						Config.TwitterConfiguration.TWITTER_CONSUMER_KEY)
+				.setOAuthConsumerSecret(
+						Config.TwitterConfiguration.TWITTER_SECRET_KEY)
+				.setOAuthAccessToken(
+						Config.TwitterConfiguration.TWITTER_ACCESS_TOKEN)
+				.setOAuthAccessTokenSecret(
+						Config.TwitterConfiguration.TWITTER_ACCESS_TOKEN_SECRET);
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		twitter = tf.getInstance();
 	}
 
-	public void buscaPalavraChave(String pesquisa) {
+	public void buscaPalavraChave(String pesquisa)  {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
 
@@ -59,44 +61,46 @@ public class TwitterController {
 					lista.insereTweet(tweet);
 				}
 			} while ((query = result.nextQuery()) != null);
-		} catch (Exception ex) {
-			Main.tratarExcessao(ex);
+		} catch (Exception e) {
+			Main.tratarExcessao(e);		
 		} finally {
 			lista.finalizar();
 		}
 	}
 
-	public void mostrarInformacoesUsuario(Status tweet) {
+	public void mostrarInformacoesUsuario(Status tweet) throws TwitterException {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		try {
-			System.out.println("Usuario: @" + tweet.getUser().getScreenName());
-			System.out
-					.println("Descrição: " + tweet.getUser().getDescription());
-			System.out.println("Localização: " + tweet.getUser().getLocation());
-			System.out.println("Nome: " + tweet.getUser().getName());
-			System.out.println(sdf.format(tweet.getCreatedAt()) + " - "
-					+ tweet.getText());
 
-			List<Status> statusUser = twitter.getUserTimeline(tweet.getUser()
-					.getId());
-			if (!statusUser.isEmpty()) {
-				System.out.println("[Últimos 5 Tweets]");
-				try {
-					int count = 0;
-					Status status = null;
-					while ((status = statusUser.get(count)) != null
-							&& count < TWEETS_TIME_LINE) {
-						System.out.println(" -> " + status.getText());
-						count++;
-					}
-				} catch (IndexOutOfBoundsException ex) {
+		BuscaPalavrasChaveView.resultadoPrintln("Usuario: @"
+				+ tweet.getUser().getScreenName());
+		BuscaPalavrasChaveView.resultadoPrintln("Descrição: "
+				+ tweet.getUser().getDescription());
+		BuscaPalavrasChaveView.resultadoPrintln("Localização: "
+				+ tweet.getUser().getLocation());
+		BuscaPalavrasChaveView.resultadoPrintln("Nome: "
+				+ tweet.getUser().getName());
+		BuscaPalavrasChaveView
+				.resultadoPrintln(sdf.format(tweet.getCreatedAt()) + " - "
+						+ tweet.getText());
 
+		List<Status> statusUser = twitter.getUserTimeline(tweet.getUser()
+				.getId());
+		if (!statusUser.isEmpty()) {
+			BuscaPalavrasChaveView.resultadoPrintln("[Últimos 5 Tweets]");
+			try {
+				int count = 0;
+				Status status = null;
+				while ((status = statusUser.get(count)) != null
+						&& count < Config.TWEETS_TIME_LINE) {
+					BuscaPalavrasChaveView.resultadoPrintln(" -> "
+							+ status.getText());
+					count++;
 				}
+			} catch (IndexOutOfBoundsException ex) {
+
 			}
-		} catch (Exception ex) {
-			Main.tratarExcessao(ex);
-		} 
-		System.out.println();
+		}
+		BuscaPalavrasChaveView.resultadoPrintln("");
 	}
 
 	public boolean isValidTweet(Status tweet) {

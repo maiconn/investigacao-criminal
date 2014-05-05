@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import twitter4j.Status;
+import br.org.furb.sic.Config;
 import br.org.furb.sic.controller.threads.ListaTweetsThread;
 import br.org.furb.sic.view.Main;
 
 /**
+ * Lista de Tweets não validados.
+ * 
  * @category Produtor
  */
 public class ListaTweets {
-	private final int LIMITE_LISTA = 100;
 
 	private List<Status> lista;
 	private ListaTweetsThread listaValidacaoThread;
@@ -26,7 +28,7 @@ public class ListaTweets {
 
 	public synchronized void insereTweet(Status tweet)
 			throws InterruptedException {
-		while (lista.size() >= LIMITE_LISTA)
+		while (lista.size() >= Config.LIMITE_LISTA_TWEETS)
 			wait();
 
 		lista.add(tweet);
