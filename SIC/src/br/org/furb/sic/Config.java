@@ -13,7 +13,7 @@ public interface Config {
 	/**
 	 * Debug da aplicação (mostrar ou não os logs)
 	 */
-	boolean DEBUG = false;
+	boolean DEBUG = true;
 
 	/**
 	 * Título do sistema na tela.

@@ -13,11 +13,11 @@ import br.org.furb.sic.controller.threads.MostrarDadosThread;
 import br.org.furb.sic.view.Main;
 
 /**
- * Controla a lista de tweets validados.
- * 
  * @category Consumidor
  */
 public class ListaTweetsValidos {
+	private static final int LIMITE_LISTA = 100;
+
 	private List<Status> lista = new ArrayList<Status>();
 	private boolean fimDosTweets = false;
 	private Semaphore semaforo;
@@ -36,7 +36,7 @@ public class ListaTweetsValidos {
 	public void adicionarTweetValido(Status tweet) throws InterruptedException {
 		lock.lock();
 		try {
-			if (lista.size() >= Config.LIMITE_LISTA_TWEETS_VALIDOS) {
+			if (lista.size() >= LIMITE_LISTA) {
 				podeAdicionar.await();
 			}
 
@@ -58,8 +58,8 @@ public class ListaTweetsValidos {
 				podeRetirar.await();
 			}
 			Status tweet = lista.remove(0);
-			Main.print("tamanho(" + lista.size() + ") removedo tweet: "
-					+ tweet.getId());
+			Main.print("tamanho(" + lista.size()
+					+ ") removedo tweet: " + tweet.getId());
 
 			podeAdicionar.signal();
 			return tweet;
@@ -78,6 +78,9 @@ public class ListaTweetsValidos {
 
 	public boolean isFimDosTweets() {
 		if (semaforo != null) {
+			// Main.print(getClass(),
+			// "semaforo.drainPermits(): "
+			// + (semaforo.drainPermits() == 0));
 			return fimDosTweets
 					&& semaforo.availablePermits() == Config.LIMITE_SEMAFORO_VALIDACAO_TWEET;
 		}
