@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import twitter4j.Status;
-import br.org.furb.sic.Config;
+import br.org.furb.sic.controller.threads.ListaTweetsThread;
 import br.org.furb.sic.controller.threads.MostrarDadosThread;
 import br.org.furb.sic.view.Main;
 
@@ -82,7 +82,7 @@ public class ListaTweetsValidos {
 			// "semaforo.drainPermits(): "
 			// + (semaforo.drainPermits() == 0));
 			return fimDosTweets
-					&& semaforo.availablePermits() == Config.LIMITE_SEMAFORO_VALIDACAO_TWEET;
+					&& semaforo.availablePermits() == ListaTweetsThread.LIMITE_THREAD;
 		}
 		return fimDosTweets;
 	}

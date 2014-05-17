@@ -2,7 +2,6 @@ package br.org.furb.sic.controller.threads;
 
 import java.util.concurrent.Semaphore;
 
-import br.org.furb.sic.Config;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.model.ListaTweetsValidos;
 import br.org.furb.sic.view.Main;
@@ -11,15 +10,17 @@ import br.org.furb.sic.view.Main;
  * Thread para controlar a lista de tweets e iniciar threads de validação.
  */
 public class ListaTweetsThread extends Thread {
-
+	public static final int LIMITE_THREAD = 20;
+	
 	private ListaTweets listaTweets;
 	private ListaTweetsValidos listaTweetsValidos;
 	private Semaphore semaforo;
-
+	
 	private int qtdTweets = 0;
+	
 
 	public ListaTweetsThread(ListaTweets listaTweets) {
-		this.semaforo = new Semaphore(Config.LIMITE_SEMAFORO_VALIDACAO_TWEET);
+		this.semaforo = new Semaphore(LIMITE_THREAD);
 		this.listaTweets = listaTweets;
 		listaTweetsValidos = new ListaTweetsValidos(semaforo);
 	}
@@ -27,9 +28,8 @@ public class ListaTweetsThread extends Thread {
 	@Override
 	public void run() {
 		Main.print("startou thread.");
-		try {
-			while (!listaTweets.isFimPesquisaTwitter() || !listaTweets.vazia()) {
-
+		while (!listaTweets.isFimPesquisaTwitter() || !listaTweets.vazia()) {
+			try {
 				if (!listaTweets.vazia()) {
 					semaforo.acquire();
 
@@ -38,18 +38,16 @@ public class ListaTweetsThread extends Thread {
 					 */
 					qtdTweets++;
 					ValidarTweetThread thread = new ValidarTweetThread(
-							listaTweets.retirarTweet(), listaTweetsValidos,
-							semaforo);
-
+							listaTweets.retirarTweet(), listaTweetsValidos, semaforo);
+					
 					thread.start();
 				}
+			} catch (Exception ex) {
+				Main.tratarExcessao(ex);
 			}
-		} catch (Exception ex) {
-			Main.tratarExcessao(ex);
-		} finally {
-			Main.print("quantidade de tweets processados: " + qtdTweets);
-			listaTweetsValidos.finalizar();
 		}
+		Main.print("quantidade de tweets processados: " + qtdTweets);
+		listaTweetsValidos.finalizar();
 	}
 
 }
