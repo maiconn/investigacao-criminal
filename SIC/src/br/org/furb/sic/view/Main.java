@@ -19,7 +19,8 @@ public class Main {
 		System.out.println("RESULTADOS");
 
 		TwitterController tc = TwitterController.getInstance();
-		tc.buscaPalavraChave(pesquisa);
+		//tc.buscaPalavraChave(pesquisa);
+		tc.buscaPalavraChaveOmp(pesquisa);
 	}
 
 	/**
