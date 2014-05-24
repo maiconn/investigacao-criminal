@@ -2,6 +2,8 @@ package Bampi;
 
 import java.util.List;
 
+import twitter4j.Status;
+import br.org.furb.sic.model.ListaTweets;
 import jomp.runtime.OMP;
 
 
@@ -19,10 +21,16 @@ public class OmpValidacao_jomp {
 		//OMP.setNumThreads(vetorTweetsBruto.length);
 		OMP.setNumThreads(listTweetsBruto.size());
 		
-		//omp parallel
+		String status = "";
+		//omp parallel private(status)
 		{
 			//System.out.print(vetorTweetsBruto[OMP.getThreadNum()] + ", ");
-			System.out.print(listTweetsBruto.get(OMP.getThreadNum()) + ", ");
+			//if (OMP.getThreadNum() < listTweetsBruto.size())
+			status = (String)listTweetsBruto.get(OMP.getThreadNum());
+			if (status != null) {
+				System.out.print(status + ", ");
+				listTweetsBruto.set(OMP.getThreadNum(), null);
+			}
 		}
 		
 		//jompLock.unset();

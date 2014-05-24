@@ -1,0 +1,22 @@
+package Bampi;
+
+import jomp.runtime.OMP;
+
+public class OmpVariasVezes_jomp {
+
+	public static void main(String[] args) {
+		
+		
+		for (int i = 0; i < 500; i++) {
+		
+			OMP.setNumThreads(15);
+			
+			//omp parallel
+			{
+				System.out.print(OMP.getThreadNum() + ", ");
+			}
+			System.out.println("");
+		}
+	}
+
+}

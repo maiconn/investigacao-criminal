@@ -2,6 +2,7 @@ package Bampi;
 
 import java.util.List;
 
+import br.org.furb.sic.model.ListaTweets;
 import jomp.runtime.OMP;
 
 
@@ -22,7 +23,11 @@ public class OmpValidacao {
 		//omp parallel
 		{
 			//System.out.print(vetorTweetsBruto[OMP.getThreadNum()] + ", ");
-			System.out.print(listTweetsBruto.get(OMP.getThreadNum()) + ", ");
+			//if (OMP.getThreadNum() < listTweetsBruto.size())
+			if (listTweetsBruto.get(OMP.getThreadNum()) != null) {
+				System.out.print(listTweetsBruto.get(OMP.getThreadNum()) + ", ");
+				listTweetsBruto.set(OMP.getThreadNum(), null);
+			}
 		}
 		
 		//jompLock.unset();

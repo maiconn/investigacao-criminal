@@ -15,10 +15,10 @@ public class OmpValidacaoTweet_jomp {
 	public OmpValidacaoTweet_jomp(List listTweetsFiltrado) {
 		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
+		OMP.setNumThreads(15);
 	}
 	
 	public void validaTweets(List listTweetsBruto) {
-		OMP.setNumThreads(listTweetsBruto.size());
 
 // OMP PARALLEL BLOCK BEGINS
 {
@@ -58,15 +58,13 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
     // OMP USER CODE BEGINS
 
 		{
-			//System.out.println(listTweetsBruto.get(OMP.getThreadNum()));
-			//System.out.println("N. da thread = " + OMP.getThreadNum() + "\n tamanho da lista = " + listTweetsBruto.size() + "\n");
-			if (tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum()))) {
+			if ((OMP.getThreadNum() < listTweetsBruto.size())
+			&&  ((tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum()))))) {
                                  // OMP CRITICAL BLOCK BEGINS
                                  synchronized (jomp.runtime.OMP.getLockByName("")) {
                                  // OMP USER CODE BEGINS
 
 				{
-					//System.out.println(listTweetsBruto.get(OMP.getThreadNum()) + "\n");
 					listTweetsFiltrado.add((Status)listTweetsBruto.get(OMP.getThreadNum()));
 				}
                                  // OMP USER CODE ENDS
@@ -74,7 +72,8 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                                  // OMP CRITICAL BLOCK ENDS
 
 			}
-			//System.out.print(OMP.getThreadNum() + ", ");
+			//if (OMP.getThreadNum() < listTweetsBruto.size())
+			//	System.out.print(OMP.getThreadNum() + ", ");
 		}
     // OMP USER CODE ENDS
   // call reducer

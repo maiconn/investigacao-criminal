@@ -14,23 +14,22 @@ public class OmpValidacaoTweet_jomp {
 	public OmpValidacaoTweet_jomp(List listTweetsFiltrado) {
 		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
+		OMP.setNumThreads(15);
 	}
 	
 	public void validaTweets(List listTweetsBruto) {
-		OMP.setNumThreads(listTweetsBruto.size());
 		
 		//omp parallel
 		{
-			//System.out.println(listTweetsBruto.get(OMP.getThreadNum()));
-			//System.out.println("N. da thread = " + OMP.getThreadNum() + "\n tamanho da lista = " + listTweetsBruto.size() + "\n");
-			if (tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum()))) {
+			if ((OMP.getThreadNum() < listTweetsBruto.size())
+			&&  ((tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum()))))) {
 				//omp critical
 				{
-					//System.out.println(listTweetsBruto.get(OMP.getThreadNum()) + "\n");
 					listTweetsFiltrado.add((Status)listTweetsBruto.get(OMP.getThreadNum()));
 				}
 			}
-			//System.out.print(OMP.getThreadNum() + ", ");
+			//if (OMP.getThreadNum() < listTweetsBruto.size())
+			//	System.out.print(OMP.getThreadNum() + ", ");
 		}
 		//System.out.println("");
 	}

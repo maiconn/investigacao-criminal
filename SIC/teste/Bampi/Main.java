@@ -29,7 +29,7 @@ public class Main {
 			}
 		
 			OmpValidacao_jomp ompValidacao = new OmpValidacao_jomp(listTweetsBruto);
-			ompValidacao.validaTweets(/*jompLock*/);
+			ompValidacao.validaTweets();
 			
 			//System.out.println("\nVez de número " + qtdeVezes + "\n");
 			

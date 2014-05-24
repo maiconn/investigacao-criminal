@@ -135,9 +135,10 @@ public class TwitterController {
 			
 			//Lock jompLock = new Lock();
 
+			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado);
+			
 			do {
 				//jompLock.set();
-				OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado);
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				if (tweets.size() > 0)
