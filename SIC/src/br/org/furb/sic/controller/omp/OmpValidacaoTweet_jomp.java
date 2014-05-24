@@ -9,11 +9,11 @@ import twitter4j.Status;
 public class OmpValidacaoTweet_jomp {
 
 	
-	//private TwitterController tc;
+	private TwitterController tc;
 	private List listTweetsFiltrado;
 	
 	public OmpValidacaoTweet_jomp(List listTweetsFiltrado) {
-		//this.tc = TwitterController.getInstance();
+		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
 	}
 	
@@ -40,7 +40,7 @@ public class OmpValidacaoTweet_jomp {
 }
 // OMP PARALLEL BLOCK ENDS
 
-		System.out.println("");
+		//System.out.println("");
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
@@ -58,7 +58,23 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
     // OMP USER CODE BEGINS
 
 		{
-			System.out.print(OMP.getThreadNum() + ", ");
+			//System.out.println(listTweetsBruto.get(OMP.getThreadNum()));
+			//System.out.println("N. da thread = " + OMP.getThreadNum() + "\n tamanho da lista = " + listTweetsBruto.size() + "\n");
+			if (tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum()))) {
+                                 // OMP CRITICAL BLOCK BEGINS
+                                 synchronized (jomp.runtime.OMP.getLockByName("")) {
+                                 // OMP USER CODE BEGINS
+
+				{
+					//System.out.println(listTweetsBruto.get(OMP.getThreadNum()) + "\n");
+					listTweetsFiltrado.add((Status)listTweetsBruto.get(OMP.getThreadNum()));
+				}
+                                 // OMP USER CODE ENDS
+                                 }
+                                 // OMP CRITICAL BLOCK ENDS
+
+			}
+			//System.out.print(OMP.getThreadNum() + ", ");
 		}
     // OMP USER CODE ENDS
   // call reducer

@@ -144,8 +144,8 @@ public class TwitterController {
 					ompValidacaoTweet.validaTweets(tweets);
 			} while ((query = result.nextQuery()) != null);
 
-			//OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado);
-			//ompMostrarTweets.mostrarTweets();
+			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado);
+			ompMostrarTweets.mostrarTweets();
 			
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
