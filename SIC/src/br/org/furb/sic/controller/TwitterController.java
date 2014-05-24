@@ -9,8 +9,10 @@ import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import br.org.furb.sic.controller.omp.ListaVaziaException;
 import br.org.furb.sic.controller.omp.OmpMostrarTweets;
 import br.org.furb.sic.controller.omp.OmpMostrarTweets_jomp;
 import br.org.furb.sic.controller.omp.OmpValidacaoTweet_jomp;
@@ -150,11 +152,21 @@ public class TwitterController {
 			
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
-		//} finally {
-		//	lista.finalizar();
 		}
 	}
-	
-	
-	
+
+	public List<Status> cincoUltimosTweetsUsuario(Status tweet) throws TwitterException, ListaVaziaException {
+		List<Status> cincoUltimosTweets;
+		cincoUltimosTweets = twitter.getUserTimeline(tweet.getUser().getId());
+		
+		if (cincoUltimosTweets.size() == 0) {
+			throw new ListaVaziaException();
+		}
+		try {
+			return cincoUltimosTweets.subList(0, 4);
+		} catch (IndexOutOfBoundsException e) {
+			return cincoUltimosTweets.subList(0, cincoUltimosTweets.size()-1);
+		}
+	}
+
 }

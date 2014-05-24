@@ -1,9 +1,13 @@
 package br.org.furb.sic.controller.omp;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import twitter4j.Status;
+import twitter4j.TwitterException;
 import jomp.runtime.OMP;
 import br.org.furb.sic.controller.TwitterController;
+import br.org.furb.sic.view.Main;
 
 public class OmpMostrarTweets_jomp {
 
@@ -81,7 +85,96 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                              for(int i = (int)__omp_ChunkData1.start; i < __omp_ChunkData1.stop; i += __omp_ChunkData1.step) {
                                // OMP USER CODE BEGINS
  {
-				System.out.println(listTweetsFiltrado.get(i) + "\n");
+				
+				String exibirNaTela = "";
+				Status tweet = (Status)listTweetsFiltrado.get(i);
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				exibirNaTela += "Usuario: @" + tweet.getUser().getScreenName() + "\n";
+				exibirNaTela += "Descri\u00e7\u00e3o: " + tweet.getUser().getDescription() + "\n";
+				exibirNaTela += "Localiza\u00e7\u00e3o: " + tweet.getUser().getLocation() + "\n";
+				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
+				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
+
+				String msgErroTwitter = "";
+				String msgErroFacebook = "";
+				List cincoUltimosTweetsUsuario = null;
+                                 { // OMP SECTIONS BLOCK BEGINS
+                                 // copy of firstprivate variables, initialized
+                                 // copy of lastprivate variables
+                                 // variables to hold result of reduction
+                                 boolean amLast1=false;
+                                 {
+                                   // firstprivate variables + init
+                                   // [last]private variables
+                                   // reduction variables + init to default
+                                   // -------------------------------------
+                                   __ompName_4: while(true) {
+                                   switch((int)jomp.runtime.OMP.getTicket(__omp_me)) {
+                                   // OMP SECTION BLOCK 0 BEGINS
+                                     case 0: {
+                                   // OMP USER CODE BEGINS
+
+					{
+						try {
+							cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
+						} catch (TwitterException e) {
+							msgErroTwitter = "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.";
+						} catch (ListaVaziaException e) {
+							msgErroTwitter = "Nenhum tweet recente.";
+						}
+					}
+                                   // OMP USER CODE ENDS
+                                     };  break;
+                                   // OMP SECTION BLOCK 0 ENDS
+                                   // OMP SECTION BLOCK 1 BEGINS
+                                     case 1: {
+                                   // OMP USER CODE BEGINS
+
+					{
+						msgErroFacebook = "\u00c0 fazer - Perfil no Facebook";
+					}
+                                   // OMP USER CODE ENDS
+                                   amLast1 = true;
+                                     };  break;
+                                   // OMP SECTION BLOCK 1 ENDS
+
+                                     default: break __ompName_4;
+                                   } // of switch
+                                   } // of while
+                                   // call reducer
+                                   jomp.runtime.OMP.resetTicket(__omp_me);
+                                   jomp.runtime.OMP.doBarrier(__omp_me);
+                                   // copy lastprivate variables out
+                                   if (amLast1) {
+                                   }
+                                 }
+                                 // update lastprivate variables
+                                 if (amLast1) {
+                                 }
+                                 // update reduction variables
+                                 if (jomp.runtime.OMP.getThreadNum(__omp_me) == 0) {
+                                 }
+                                 } // OMP SECTIONS BLOCK ENDS
+
+				
+				if (msgErroTwitter.trim().equals("")) {
+					if (cincoUltimosTweetsUsuario != null) {
+						exibirNaTela += "[\u00daltimos Tweets]\n";
+						for (int j = 0; j < cincoUltimosTweetsUsuario.size(); j++) {
+							exibirNaTela += " -> " + ((Status) cincoUltimosTweetsUsuario.get(j)).getText() + "\n";
+						}
+					}
+				} else {
+					exibirNaTela += msgErroTwitter + "\n";
+				}
+				
+				if (msgErroFacebook.trim().equals("")) {
+					
+				} else {
+					exibirNaTela += msgErroFacebook + "\n";
+				}
+				
+				System.out.println(exibirNaTela);
 			}
                                // OMP USER CODE ENDS
                                if (i == (__omp_WholeData2.stop-1)) amLast = true;
