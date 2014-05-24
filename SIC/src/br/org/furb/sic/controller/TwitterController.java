@@ -1,16 +1,18 @@
 package br.org.furb.sic.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jomp.runtime.Lock;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
+import br.org.furb.sic.controller.omp.OmpMostrarTweets;
+import br.org.furb.sic.controller.omp.OmpMostrarTweets_jomp;
 import br.org.furb.sic.controller.omp.OmpValidacaoTweet_jomp;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.util.StringUtil;
@@ -121,25 +123,30 @@ public class TwitterController {
 	
 	
 	
-	public void buscaPalavraChaveOmp(String pesquisa) {
+	public synchronized void buscaPalavraChaveOmp(String pesquisa) {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
 
-		Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
+		//Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
+		List listTweetsFiltrado = new ArrayList();
 		try {
 			Query query = new Query(pesquisa);
 			QueryResult result;
 			
-			Lock jompLock = new Lock();
-			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp();
+			//Lock jompLock = new Lock();
 
 			do {
 				//jompLock.set();
+				OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado);
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				if (tweets.size() > 0)
-					ompValidacaoTweet.validaTweets(tweets, jompLock);
+					ompValidacaoTweet.validaTweets(tweets);
 			} while ((query = result.nextQuery()) != null);
+
+			//OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado);
+			//ompMostrarTweets.mostrarTweets();
+			
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
 		//} finally {

@@ -1,6 +1,9 @@
 package Bampi;
 
-import jomp.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import jomp.runtime.OMP;
 
 //import java.util.Random;
 
@@ -8,24 +11,27 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		Object[] vetorTweetsBruto = new Object[100];
+		//Object[] vetorTweetsBruto = new Object[15];
+		
+		List listTweetsBruto;
 		
 		//Random enchedorDeVetor = new Random();
 		
-		Lock jompLock = new Lock();
+		//Lock jompLock = new Lock();
 		
-		for (int qtdeVezes = 0; qtdeVezes < 3; qtdeVezes++) {
+		for (int qtdeVezes = 0; qtdeVezes < 500; qtdeVezes++) {
 			
-			jompLock.set();
+			//jompLock.set();
+			listTweetsBruto = new ArrayList();
 			
-			for (int i = 0; i < vetorTweetsBruto.length; i++) {
-				vetorTweetsBruto[i] = String.valueOf(i); //enchedorDeVetor.nextInt(100));
+			for (int i = 0; i < 15; i++) {
+				listTweetsBruto.add(String.valueOf(i)); //enchedorDeVetor.nextInt(100));
 			}
 		
-			OmpValidacao_jomp ompValidacao = new OmpValidacao_jomp(vetorTweetsBruto);
-			ompValidacao.validaTweets(jompLock);
+			OmpValidacao_jomp ompValidacao = new OmpValidacao_jomp(listTweetsBruto);
+			ompValidacao.validaTweets(/*jompLock*/);
 			
-			System.out.println("\nVez de número " + qtdeVezes + "\n");
+			//System.out.println("\nVez de número " + qtdeVezes + "\n");
 			
 			
 		}

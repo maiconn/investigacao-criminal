@@ -2,22 +2,30 @@ package br.org.furb.sic.controller.omp;
 
 import java.util.List;
 
-import jomp.runtime.Lock;
+import br.org.furb.sic.controller.TwitterController;
 import jomp.runtime.OMP;
 import twitter4j.Status;
 
 public class OmpValidacaoTweet_jomp {
 
 	
-	public void validaTweets(List listTweetsBruto, Lock jompLock) {
+	//private TwitterController tc;
+	private List listTweetsFiltrado;
+	
+	public OmpValidacaoTweet_jomp(List listTweetsFiltrado) {
+		//this.tc = TwitterController.getInstance();
+		this.listTweetsFiltrado = listTweetsFiltrado;
+	}
+	
+	public void validaTweets(List listTweetsBruto) {
 		OMP.setNumThreads(listTweetsBruto.size());
 
 // OMP PARALLEL BLOCK BEGINS
 {
   __omp_Class0 __omp_Object0 = new __omp_Class0();
   // shared variables
-  __omp_Object0.jompLock = jompLock;
   __omp_Object0.listTweetsBruto = listTweetsBruto;
+  __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
   // firstprivate variables
   try {
     jomp.runtime.OMP.doParallel(__omp_Object0);
@@ -27,22 +35,19 @@ public class OmpValidacaoTweet_jomp {
   }
   // reduction variables
   // shared variables
-  jompLock = __omp_Object0.jompLock;
   listTweetsBruto = __omp_Object0.listTweetsBruto;
+  listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
 }
 // OMP PARALLEL BLOCK ENDS
 
-		
-		System.out.println("\n\nLista Completa\n\n");
-		
-		jompLock.unset();
+		System.out.println("");
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
 private class __omp_Class0 extends jomp.runtime.BusyTask {
   // shared variables
-  Lock jompLock;
   List listTweetsBruto;
+  List listTweetsFiltrado;
   // firstprivate variables
   // variables to hold results of reduction
 
@@ -53,8 +58,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
     // OMP USER CODE BEGINS
 
 		{
-			System.out.println(listTweetsBruto.get(OMP.getThreadNum()));
-			System.out.println("N. da thread = " + OMP.getThreadNum() + "\n tamanho da lista = " + listTweetsBruto.size() + "\n");
+			System.out.print(OMP.getThreadNum() + ", ");
 		}
     // OMP USER CODE ENDS
   // call reducer

@@ -5,12 +5,12 @@ import java.util.List;
 import jomp.runtime.OMP;
 
 
-public class OmpValidacao {
+public class OmpValidacao_jomp {
 	
 	//private Object[] vetorTweetsBruto;
 	private List listTweetsBruto;
 	
-	public OmpValidacao(List listTweetsBruto) {
+	public OmpValidacao_jomp(List listTweetsBruto) {
 		//this.vetorTweetsBruto = vetorTweetsBruto;
 		this.listTweetsBruto = listTweetsBruto;
 	}
