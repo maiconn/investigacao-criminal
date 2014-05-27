@@ -1,0 +1,27 @@
+package Bampi;
+
+import jomp.runtime.OMP;
+
+public class SectionAnal_jomp {
+	
+	public String funcaoBesta() {
+		
+		String[] lol = new String[2];
+		
+		//omp parallel
+		{
+			//omp sections
+			{
+				//omp section
+				{
+					lol[0] = "section 1";
+				}
+				//omp section
+				{
+					lol[1] = "section 2";
+				}
+			}
+		}
+		return lol[0] + "\n" + lol[1];
+	}
+}

@@ -1,33 +1,20 @@
-package br.org.furb.sic.controller.omp;
+package Bampi;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-
-import twitter4j.Status;
-import twitter4j.TwitterException;
+import jomp.runtime.Lock;
 import jomp.runtime.OMP;
-import br.org.furb.sic.controller.TwitterController;
-import br.org.furb.sic.view.Main;
 
-public class OmpMostrarTweets_jomp {
+public class ComportamentoOmpForComSections_jomp {
 
-	
-	private TwitterController tc;
-	private List listTweetsFiltrado;
-	
-	public OmpMostrarTweets_jomp(List listTweetsFiltrado) {
-		this.tc = TwitterController.getInstance();
-		this.listTweetsFiltrado = listTweetsFiltrado;
-	}
-	
-	public void mostrarTweets() {
+
+	public static void main(String[] args) {
+		
 		OMP.setNumThreads(15);
 
 // OMP PARALLEL BLOCK BEGINS
 {
   __omp_Class0 __omp_Object0 = new __omp_Class0();
   // shared variables
-  __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
+  __omp_Object0.args = args;
   // firstprivate variables
   try {
     jomp.runtime.OMP.doParallel(__omp_Object0);
@@ -37,16 +24,16 @@ public class OmpMostrarTweets_jomp {
   }
   // reduction variables
   // shared variables
-  listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
+  args = __omp_Object0.args;
 }
 // OMP PARALLEL BLOCK ENDS
 
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
-private class __omp_Class0 extends jomp.runtime.BusyTask {
+private static class __omp_Class0 extends jomp.runtime.BusyTask {
   // shared variables
-  List listTweetsFiltrado;
+  String [ ] args;
   // firstprivate variables
   // variables to hold results of reduction
 
@@ -70,7 +57,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                            jomp.runtime.LoopData __omp_WholeData2 = new jomp.runtime.LoopData();
                            jomp.runtime.LoopData __omp_ChunkData1 = new jomp.runtime.LoopData();
                            __omp_WholeData2.start = (long)( 0);
-                           __omp_WholeData2.stop = (long)( listTweetsFiltrado.size());
+                           __omp_WholeData2.stop = (long)( 100);
                            __omp_WholeData2.step = (long)(1);
                            jomp.runtime.OMP.setChunkStatic(__omp_WholeData2);
                            while(!__omp_ChunkData1.isLast && jomp.runtime.OMP.getLoopStatic(__omp_me, __omp_WholeData2, __omp_ChunkData1)) {
@@ -85,34 +72,10 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                              for(int i = (int)__omp_ChunkData1.start; i < __omp_ChunkData1.stop; i += __omp_ChunkData1.step) {
                                // OMP USER CODE BEGINS
  {
-				
 				String exibirNaTela = "";
-				Status tweet = (Status)listTweetsFiltrado.get(i);
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-				exibirNaTela += "Usuario: @" + tweet.getUser().getScreenName() + "\n";
-				exibirNaTela += "Descri\u00e7\u00e3o: " + tweet.getUser().getDescription() + "\n";
-				exibirNaTela += "Localiza\u00e7\u00e3o: " + tweet.getUser().getLocation() + "\n";
-				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
-				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
-
-				List cincoUltimosTweetsUsuario = null;
-				
-				try {
-					cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
-					if (cincoUltimosTweetsUsuario != null) {
-						exibirNaTela += "[\u00daltimos Tweets]\n";
-						for (int j = 0; j < cincoUltimosTweetsUsuario.size(); j++) {
-							exibirNaTela += " -> " + ((Status) cincoUltimosTweetsUsuario.get(j)).getText() + "\n";
-						}
-					}
-				} catch (TwitterException e) {
-					exibirNaTela += "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
-				} catch (ListaVaziaException e) {
-					exibirNaTela += "Nenhum tweet recente.\n";
-				}
-
-				exibirNaTela += "\u00c0 fazer - Perfil no Facebook\n";
-				
+				SectionAnal_jomp s = new SectionAnal_jomp();
+				exibirNaTela += s.funcaoBesta();
+				exibirNaTela += "Ap\u00f3s as sections";
 				System.out.println(exibirNaTela);
 			}
                                // OMP USER CODE ENDS

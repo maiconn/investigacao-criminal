@@ -3,6 +3,7 @@ package br.org.furb.sic.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import twitter4j.Query;
@@ -131,6 +132,9 @@ public class TwitterController {
 
 		//Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
 		List listTweetsFiltrado = new ArrayList();
+		HashMap listaCincoUltimosTweets = new HashMap();
+		HashMap listaPerfisFacebook = new HashMap();
+		
 		try {
 			Query query = new Query(pesquisa);
 			QueryResult result;
@@ -163,10 +167,31 @@ public class TwitterController {
 			throw new ListaVaziaException();
 		}
 		try {
-			return cincoUltimosTweets.subList(0, 4);
+			return cincoUltimosTweets.subList(0, 5);
 		} catch (IndexOutOfBoundsException e) {
 			return cincoUltimosTweets.subList(0, cincoUltimosTweets.size()-1);
 		}
+	}
+	
+	public String cincoUltimosTweetsUsuario(long idUsuario) {
+		int i = 0;
+		String result = "";
+		
+		try {
+			List<Status> cincoUltimosTweets;
+			cincoUltimosTweets = twitter.getUserTimeline(idUsuario);
+			
+			for (i = 0; i < 5; i++) {
+				result += " -> " + ((Status) cincoUltimosTweets.get(i)).getText() + "\n";
+			}
+		} catch (IndexOutOfBoundsException e) {
+			if (i == 0) {
+				result = "Nenhum tweet recente.\n";
+			}
+		} catch (TwitterException ex) {
+			result = "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
+		}
+		return result;
 	}
 
 }

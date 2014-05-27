@@ -1,6 +1,7 @@
 package br.org.furb.sic.controller.omp;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import twitter4j.Status;
@@ -13,14 +14,19 @@ public class OmpMostrarTweets {
 	
 	private TwitterController tc;
 	private List listTweetsFiltrado;
+	private HashMap listaCincoUltimosTweets;
+	private HashMap listaPerfisFacebook;
 	
-	public OmpMostrarTweets(List listTweetsFiltrado) {
+	public OmpMostrarTweets(List listTweetsFiltrado, HashMap listaCincoUltimosTweets, HashMap listaPerfisFacebook) {
 		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
+		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
+		this.listaPerfisFacebook = listaPerfisFacebook;
+		
+		OMP.setNumThreads(15);
 	}
 	
 	public void mostrarTweets() {
-		OMP.setNumThreads(15);
 		
 		//omp parallel
 		{
@@ -36,45 +42,25 @@ public class OmpMostrarTweets {
 				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
 				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
 
-				String msgErroTwitter = "";
-				String msgErroFacebook = "";
-				List cincoUltimosTweetsUsuario = null;
+				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
 				
-				//omp sections
-				{					
-					//omp section
-					{
-						try {
-							cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
-						} catch (TwitterException e) {
-							msgErroTwitter = "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.";
-						} catch (ListaVaziaException e) {
-							msgErroTwitter = "Nenhum tweet recente.";
-						}
-					}
-						
-					//omp section
-					{
-						msgErroFacebook = "À fazer - Perfil no Facebook";
-					}
-				}
+				/*List cincoUltimosTweetsUsuario = null;
 				
-				if (msgErroTwitter.trim().equals("")) {
+				try {
+					cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
 					if (cincoUltimosTweetsUsuario != null) {
 						exibirNaTela += "[Últimos Tweets]\n";
 						for (int j = 0; j < cincoUltimosTweetsUsuario.size(); j++) {
 							exibirNaTela += " -> " + ((Status) cincoUltimosTweetsUsuario.get(j)).getText() + "\n";
 						}
 					}
-				} else {
-					exibirNaTela += msgErroTwitter + "\n";
-				}
-				
-				if (msgErroFacebook.trim().equals("")) {
-					
-				} else {
-					exibirNaTela += msgErroFacebook + "\n";
-				}
+				} catch (TwitterException e) {
+					exibirNaTela += "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
+				} catch (ListaVaziaException e) {
+					exibirNaTela += "Nenhum tweet recente.\n";
+				}*/
+
+				exibirNaTela += "À fazer - Perfil no Facebook\n";
 				
 				System.out.println(exibirNaTela);
 			}
