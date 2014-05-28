@@ -43,8 +43,7 @@ public class FacebookController {
 				perfis = "====== Nenhum perfil do Facebook encontrado ======";
 			
 			for(User p: result){
-				perfis += "-> ID: "+ p.getId() + "\n";
-				perfis += "-> Nome: "+ p.getName() + "\n\n";						
+				perfis += "-> ID: "+ p.getId() + " - Nome: "+ p.getName() + "\n";						
 			}
 		} catch (FacebookException e) {
 			perfis = "Perfil do Facebook não encontrado.";

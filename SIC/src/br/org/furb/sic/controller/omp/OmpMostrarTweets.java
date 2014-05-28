@@ -44,7 +44,7 @@ public class OmpMostrarTweets {
 
 				// pq o hash map?
 				// não deveria usar o método cincoUltimosTweetsUsuario()?
-				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId()) + "\n";
+				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
 				
 				/*List cincoUltimosTweetsUsuario = null;
 				
@@ -62,7 +62,7 @@ public class OmpMostrarTweets {
 					exibirNaTela += "Nenhum tweet recente.\n";
 				}*/
 
-				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId()) + "\n";
+				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
 				
 				System.out.println(exibirNaTela);
 			}
