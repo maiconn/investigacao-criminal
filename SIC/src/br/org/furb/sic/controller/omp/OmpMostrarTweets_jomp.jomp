@@ -1,6 +1,7 @@
 package br.org.furb.sic.controller.omp;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import twitter4j.Status;
@@ -13,14 +14,19 @@ public class OmpMostrarTweets_jomp {
 	
 	private TwitterController tc;
 	private List listTweetsFiltrado;
+	private HashMap listaCincoUltimosTweets;
+	private HashMap listaPerfisFacebook;
 	
-	public OmpMostrarTweets_jomp(List listTweetsFiltrado) {
+	public OmpMostrarTweets_jomp(List listTweetsFiltrado, HashMap listaCincoUltimosTweets, HashMap listaPerfisFacebook) {
 		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
+		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
+		this.listaPerfisFacebook = listaPerfisFacebook;
+		
+		OMP.setNumThreads(15);
 	}
 	
 	public void mostrarTweets() {
-		OMP.setNumThreads(15);
 		
 		//omp parallel
 		{
@@ -36,7 +42,9 @@ public class OmpMostrarTweets_jomp {
 				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
 				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
 
-				List cincoUltimosTweetsUsuario = null;
+				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
+				
+				/*List cincoUltimosTweetsUsuario = null;
 				
 				try {
 					cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
@@ -50,7 +58,7 @@ public class OmpMostrarTweets_jomp {
 					exibirNaTela += "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
 				} catch (ListaVaziaException e) {
 					exibirNaTela += "Nenhum tweet recente.\n";
-				}
+				}*/
 
 				exibirNaTela += "À fazer - Perfil no Facebook\n";
 				

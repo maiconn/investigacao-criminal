@@ -1,6 +1,7 @@
 package br.org.furb.sic.controller.omp;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import twitter4j.Status;
@@ -14,19 +15,26 @@ public class OmpMostrarTweets_jomp {
 	
 	private TwitterController tc;
 	private List listTweetsFiltrado;
+	private HashMap listaCincoUltimosTweets;
+	private HashMap listaPerfisFacebook;
 	
-	public OmpMostrarTweets_jomp(List listTweetsFiltrado) {
+	public OmpMostrarTweets_jomp(List listTweetsFiltrado, HashMap listaCincoUltimosTweets, HashMap listaPerfisFacebook) {
 		this.tc = TwitterController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
+		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
+		this.listaPerfisFacebook = listaPerfisFacebook;
+		
+		OMP.setNumThreads(15);
 	}
 	
 	public void mostrarTweets() {
-		OMP.setNumThreads(15);
 
 // OMP PARALLEL BLOCK BEGINS
 {
   __omp_Class0 __omp_Object0 = new __omp_Class0();
   // shared variables
+  __omp_Object0.listaPerfisFacebook = listaPerfisFacebook;
+  __omp_Object0.listaCincoUltimosTweets = listaCincoUltimosTweets;
   __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
   // firstprivate variables
   try {
@@ -37,6 +45,8 @@ public class OmpMostrarTweets_jomp {
   }
   // reduction variables
   // shared variables
+  listaPerfisFacebook = __omp_Object0.listaPerfisFacebook;
+  listaCincoUltimosTweets = __omp_Object0.listaCincoUltimosTweets;
   listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
 }
 // OMP PARALLEL BLOCK ENDS
@@ -46,6 +56,8 @@ public class OmpMostrarTweets_jomp {
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
 private class __omp_Class0 extends jomp.runtime.BusyTask {
   // shared variables
+  HashMap listaPerfisFacebook;
+  HashMap listaCincoUltimosTweets;
   List listTweetsFiltrado;
   // firstprivate variables
   // variables to hold results of reduction
@@ -95,7 +107,9 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
 				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
 
-				List cincoUltimosTweetsUsuario = null;
+				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
+				
+				/*List cincoUltimosTweetsUsuario = null;
 				
 				try {
 					cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
@@ -109,7 +123,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 					exibirNaTela += "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
 				} catch (ListaVaziaException e) {
 					exibirNaTela += "Nenhum tweet recente.\n";
-				}
+				}*/
 
 				exibirNaTela += "\u00c0 fazer - Perfil no Facebook\n";
 				

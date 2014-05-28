@@ -141,7 +141,7 @@ public class TwitterController {
 			
 			//Lock jompLock = new Lock();
 
-			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado);
+			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
 			
 			do {
 				//jompLock.set();
@@ -151,7 +151,7 @@ public class TwitterController {
 					ompValidacaoTweet.validaTweets(tweets);
 			} while ((query = result.nextQuery()) != null);
 
-			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado);
+			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
 			ompMostrarTweets.mostrarTweets();
 			
 		} catch (Exception ex) {
