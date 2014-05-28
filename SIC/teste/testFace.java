@@ -12,13 +12,12 @@ import facebook4j.internal.org.json.JSONException;
 public class testFace {
 	
 	public static void main(String[] args) throws FacebookException, JSONException{		
-		
-		
+				
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true)
-		.setOAuthAppId("670772572989250")
-		.setOAuthAppSecret("5656c9ece88d88110d79796bb82b174a")
-		.setOAuthAccessToken("CAAJiEGjwJ0IBADLqUJpf2oYCghyTZCl61vpHbXgvmnk17f04U9pwRvIfvYllVR0fiPx1uKWO6UZAoVstYp3lCHzr6ZAUFnudZCjEoDgF0wg8ZCZCawWFN90WjmD7ZBKoSA71IOfdZBDhf3dtGMPbishnB8827eZAzWnRN2HM7keacphvnoCY79cZBBu6Bo8sG6Hi0ZD")							  	
+		.setOAuthAppId("670772572989250")						
+		.setOAuthAppSecret("5656c9ece88d88110d79796bb82b174a")							
+		.setOAuthAccessToken("CAAJiEGjwJ0IBAKGdzg6fkKzY2CFcuGwcOlaUtr1awzZAcGl43rs4jlIgIzTeZAzHrwjevXYonjHQ9E7nzvFQDq3tGonfZBP6xqZAJuaaDokL9UlOm9lJkZBzq1DgUEHxPPBRpI0as71lyf4Qlocvmh4vMlyfS7ZAlRDZBVoeSlg9BnSsmEZB11fIEYIiqVMRLjMZD")							  	
 		.setOAuthPermissions("email,publish_stream,...");
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		Facebook facebook = ff.getInstance();	

@@ -42,6 +42,8 @@ public class OmpMostrarTweets {
 				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
 				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
 
+				// pq o hash map?
+				// não deveria usar o método cincoUltimosTweetsUsuario()?
 				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
 				
 				/*List cincoUltimosTweetsUsuario = null;
