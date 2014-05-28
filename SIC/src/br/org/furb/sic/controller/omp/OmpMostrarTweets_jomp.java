@@ -107,6 +107,8 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
 				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
 
+				// pq o hash map?
+				// n\u00e3o deveria usar o m\u00e9todo cincoUltimosTweetsUsuario()?
 				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
 				
 				/*List cincoUltimosTweetsUsuario = null;
@@ -125,7 +127,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 					exibirNaTela += "Nenhum tweet recente.\n";
 				}*/
 
-				exibirNaTela += "\u00c0 fazer - Perfil no Facebook\n";
+				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
 				
 				System.out.println(exibirNaTela);
 			}

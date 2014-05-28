@@ -62,7 +62,7 @@ public class OmpMostrarTweets {
 					exibirNaTela += "Nenhum tweet recente.\n";
 				}*/
 
-				exibirNaTela += "À fazer - Perfil no Facebook\n";
+				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
 				
 				System.out.println(exibirNaTela);
 			}
