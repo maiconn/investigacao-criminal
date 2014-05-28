@@ -31,21 +31,24 @@ public class FacebookController {
 		facebook = ff.getInstance();	
 	}
 
-	public String buscaPerfilFacebook(String userName) throws FacebookException {
+	public String buscaPerfilFacebook(String userName) {
 		String perfis = "";
-		
-		ResponseList<User> result = facebook.searchUsers(userName);
-		
-		if (result!=null)
-			perfis = "====== Perfil Facebook ======";
-		else
-			perfis = "====== Nenhum perfil do Facebook encontrado ======";
-		
-		for(User p: result){
-			perfis += "-> ID: "+ p.getId() + "\n";
-			perfis += "-> Nome: "+ p.getName() + "\n\n";						
+
+		try {
+			ResponseList<User> result = facebook.searchUsers(userName);
+			
+			if (result!=null)
+				perfis = "====== Perfil Facebook ======";
+			else
+				perfis = "====== Nenhum perfil do Facebook encontrado ======";
+			
+			for(User p: result){
+				perfis += "-> ID: "+ p.getId() + "\n";
+				perfis += "-> Nome: "+ p.getName() + "\n\n";						
+			}
+		} catch (FacebookException e) {
+			perfis = "Perfil do Facebook não encontrado.";
 		}
-		
 		return perfis;			
 				
 	}

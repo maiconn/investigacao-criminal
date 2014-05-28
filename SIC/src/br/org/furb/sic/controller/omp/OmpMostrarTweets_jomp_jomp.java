@@ -1,0 +1,166 @@
+package br.org.furb.sic.controller.omp;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+
+import twitter4j.Status;
+import twitter4j.TwitterException;
+import jomp.runtime.OMP;
+import br.org.furb.sic.controller.TwitterController;
+import br.org.furb.sic.view.Main;
+
+public class OmpMostrarTweets_jomp_jomp {
+
+
+	
+	private TwitterController tc;
+	private List listTweetsFiltrado;
+	private HashMap listaCincoUltimosTweets;
+	private HashMap listaPerfisFacebook;
+	
+	public OmpMostrarTweets_jomp_jomp(List listTweetsFiltrado, HashMap listaCincoUltimosTweets, HashMap listaPerfisFacebook) {
+		this.tc = TwitterController.getInstance();
+		this.listTweetsFiltrado = listTweetsFiltrado;
+		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
+		this.listaPerfisFacebook = listaPerfisFacebook;
+		
+		OMP.setNumThreads(15);
+	}
+	
+	public void mostrarTweets() {
+
+// OMP PARALLEL BLOCK BEGINS
+{
+  __omp_Class0 __omp_Object0 = new __omp_Class0();
+  // shared variables
+  __omp_Object0.listaPerfisFacebook = listaPerfisFacebook;
+  __omp_Object0.listaCincoUltimosTweets = listaCincoUltimosTweets;
+  __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
+  // firstprivate variables
+  try {
+    jomp.runtime.OMP.doParallel(__omp_Object0);
+  } catch(Throwable __omp_exception) {
+    System.err.println("OMP Warning: Illegal thread exception ignored!");
+    System.err.println(__omp_exception);
+  }
+  // reduction variables
+  // shared variables
+  listaPerfisFacebook = __omp_Object0.listaPerfisFacebook;
+  listaCincoUltimosTweets = __omp_Object0.listaCincoUltimosTweets;
+  listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
+}
+// OMP PARALLEL BLOCK ENDS
+
+	}
+
+// OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
+private class __omp_Class0 extends jomp.runtime.BusyTask {
+
+  // shared variables
+  HashMap listaPerfisFacebook;
+  HashMap listaCincoUltimosTweets;
+  List listTweetsFiltrado;
+  // firstprivate variables
+  // variables to hold results of reduction
+
+  public void go(int __omp_me) throws Throwable {
+  // firstprivate variables + init
+  // private variables
+  // reduction variables, init to default
+    // OMP USER CODE BEGINS
+
+		{
+                         { // OMP FOR BLOCK BEGINS
+                         // copy of firstprivate variables, initialized
+                         // copy of lastprivate variables
+                         // variables to hold result of reduction
+                         boolean amLast=false;
+                         {
+                           // firstprivate variables + init
+                           // [last]private variables
+                           // reduction variables + init to default
+                           // -------------------------------------
+                           jomp.runtime.LoopData __omp_WholeData2 = new jomp.runtime.LoopData();
+                           jomp.runtime.LoopData __omp_ChunkData1 = new jomp.runtime.LoopData();
+                           __omp_WholeData2.start = (long)( 0);
+                           __omp_WholeData2.stop = (long)( listTweetsFiltrado.size());
+                           __omp_WholeData2.step = (long)(1);
+                           jomp.runtime.OMP.setChunkStatic(__omp_WholeData2);
+                           while(!__omp_ChunkData1.isLast && jomp.runtime.OMP.getLoopStatic(__omp_me, __omp_WholeData2, __omp_ChunkData1)) {
+                           for(;;) {
+                             if(__omp_WholeData2.step > 0) {
+                                if(__omp_ChunkData1.stop > __omp_WholeData2.stop) __omp_ChunkData1.stop = __omp_WholeData2.stop;
+                                if(__omp_ChunkData1.start >= __omp_WholeData2.stop) break;
+                             } else {
+                                if(__omp_ChunkData1.stop < __omp_WholeData2.stop) __omp_ChunkData1.stop = __omp_WholeData2.stop;
+                                if(__omp_ChunkData1.start > __omp_WholeData2.stop) break;
+                             }
+                             for(int i = (int)__omp_ChunkData1.start; i < __omp_ChunkData1.stop; i += __omp_ChunkData1.step) {
+                               // OMP USER CODE BEGINS
+ {
+				
+				String exibirNaTela = "";
+				Status tweet = (Status)listTweetsFiltrado.get(i);
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				exibirNaTela += "Usuario: @" + tweet.getUser().getScreenName() + "\n";
+				exibirNaTela += "Descri\u00e7\u00e3o: " + tweet.getUser().getDescription() + "\n";
+				exibirNaTela += "Localiza\u00e7\u00e3o: " + tweet.getUser().getLocation() + "\n";
+				exibirNaTela += "Nome: " + tweet.getUser().getName() + "\n";
+				exibirNaTela += sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText() + "\n";
+
+				exibirNaTela += listaCincoUltimosTweets.get(tweet.getUser().getId());
+				
+				/*List cincoUltimosTweetsUsuario = null;
+				
+				try {
+					cincoUltimosTweetsUsuario = tc.cincoUltimosTweetsUsuario(tweet);
+					if (cincoUltimosTweetsUsuario != null) {
+						exibirNaTela += "[\u00daltimos Tweets]\n";
+						for (int j = 0; j < cincoUltimosTweetsUsuario.size(); j++) {
+							exibirNaTela += " -> " + ((Status) cincoUltimosTweetsUsuario.get(j)).getText() + "\n";
+						}
+					}
+				} catch (TwitterException e) {
+					exibirNaTela += "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
+				} catch (ListaVaziaException e) {
+					exibirNaTela += "Nenhum tweet recente.\n";
+				}*/
+
+				exibirNaTela += "\u00c0 fazer - Perfil no Facebook\n";
+				
+				System.out.println(exibirNaTela);
+			}
+                               // OMP USER CODE ENDS
+                               if (i == (__omp_WholeData2.stop-1)) amLast = true;
+                             } // of for 
+                             if(__omp_ChunkData1.startStep == 0)
+                               break;
+                             __omp_ChunkData1.start += __omp_ChunkData1.startStep;
+                             __omp_ChunkData1.stop += __omp_ChunkData1.startStep;
+                           } // of for(;;)
+                           } // of while
+                           // call reducer
+                           jomp.runtime.OMP.doBarrier(__omp_me);
+                           // copy lastprivate variables out
+                           if (amLast) {
+                           }
+                         }
+                         // set global from lastprivate variables
+                         if (amLast) {
+                         }
+                         // set global from reduction variables
+                         if (jomp.runtime.OMP.getThreadNum(__omp_me) == 0) {
+                         }
+                         } // OMP FOR BLOCK ENDS
+
+		}
+    // OMP USER CODE ENDS
+  // call reducer
+  // output to _rd_ copy
+  if (jomp.runtime.OMP.getThreadNum(__omp_me) == 0) {
+  }
+  }}
+}
+
+

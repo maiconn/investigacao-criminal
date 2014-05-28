@@ -3,6 +3,7 @@ package br.org.furb.sic.controller.omp;
 import java.util.HashMap;
 import java.util.List;
 
+import br.org.furb.sic.controller.FacebookController;
 import br.org.furb.sic.controller.TwitterController;
 import jomp.runtime.OMP;
 import twitter4j.Status;
@@ -11,12 +12,14 @@ public class OmpValidacaoTweet_jomp {
 
 	
 	private TwitterController tc;
+	private FacebookController fc;
 	private List listTweetsFiltrado;
 	private HashMap listaCincoUltimosTweets;
 	private HashMap listaPerfisFacebook;
 	
 	public OmpValidacaoTweet_jomp(List listTweetsFiltrado, HashMap listaCincoUltimosTweets, HashMap listaPerfisFacebook) {
 		this.tc = TwitterController.getInstance();
+		this.fc = FacebookController.getInstance();
 		this.listTweetsFiltrado = listTweetsFiltrado;
 		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
 		this.listaPerfisFacebook = listaPerfisFacebook;
@@ -132,7 +135,7 @@ private class __omp_Class1 extends jomp.runtime.BusyTask {
                                            // OMP USER CODE BEGINS
 
 						{
-							//Facebook
+							listaPerfisFacebook.put(status.getUser().getId(), fc.buscaPerfilFacebook(status.getUser().getName()));
 						}
                                            // OMP USER CODE ENDS
                                            amLast = true;
