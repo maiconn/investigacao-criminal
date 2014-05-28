@@ -27,7 +27,7 @@ public class OmpValidacaoTweet_jomp {
 		OMP.setNumThreads(15);
 	}
 	
-	public void validaTweets(List listTweetsBruto) {
+	public int validaTweets(List listTweetsBruto, int qtdeTweetsBruto) {
 
 // OMP PARALLEL BLOCK BEGINS
 {
@@ -45,6 +45,7 @@ public class OmpValidacaoTweet_jomp {
     System.err.println(__omp_exception);
   }
   // reduction variables
+  qtdeTweetsBruto  += __omp_Object0._rd_qtdeTweetsBruto;
   // shared variables
   listTweetsBruto = __omp_Object0.listTweetsBruto;
   listaPerfisFacebook = __omp_Object0.listaPerfisFacebook;
@@ -63,6 +64,7 @@ public class OmpValidacaoTweet_jomp {
   // shared variables
   __omp_Object1.status = status;
   __omp_Object1.i = i;
+  __omp_Object1.qtdeTweetsBruto = qtdeTweetsBruto;
   __omp_Object1.listTweetsBruto = listTweetsBruto;
   __omp_Object1.listaPerfisFacebook = listaPerfisFacebook;
   __omp_Object1.listaCincoUltimosTweets = listaCincoUltimosTweets;
@@ -78,6 +80,7 @@ public class OmpValidacaoTweet_jomp {
   // shared variables
   status = __omp_Object1.status;
   i = __omp_Object1.i;
+  qtdeTweetsBruto = __omp_Object1.qtdeTweetsBruto;
   listTweetsBruto = __omp_Object1.listTweetsBruto;
   listaPerfisFacebook = __omp_Object1.listaPerfisFacebook;
   listaCincoUltimosTweets = __omp_Object1.listaCincoUltimosTweets;
@@ -87,6 +90,7 @@ public class OmpValidacaoTweet_jomp {
 
 			}
 		}
+		return qtdeTweetsBruto;
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
@@ -94,6 +98,7 @@ private class __omp_Class1 extends jomp.runtime.BusyTask {
   // shared variables
   Status status;
   int i;
+  int qtdeTweetsBruto;
   List listTweetsBruto;
   HashMap listaPerfisFacebook;
   HashMap listaCincoUltimosTweets;
@@ -181,11 +186,13 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
   List listTweetsFiltrado;
   // firstprivate variables
   // variables to hold results of reduction
+  int _rd_qtdeTweetsBruto;
 
   public void go(int __omp_me) throws Throwable {
   // firstprivate variables + init
   // private variables
   // reduction variables, init to default
+  int qtdeTweetsBruto = 0;
     // OMP USER CODE BEGINS
 
 		{
@@ -205,12 +212,15 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 				} else {
 					listTweetsBruto.set(OMP.getThreadNum(), null);
 				}
+				qtdeTweetsBruto++;
 			}
 		}
     // OMP USER CODE ENDS
   // call reducer
+  qtdeTweetsBruto = (int) jomp.runtime.OMP.doPlusReduce(__omp_me, qtdeTweetsBruto);
   // output to _rd_ copy
   if (jomp.runtime.OMP.getThreadNum(__omp_me) == 0) {
+    _rd_qtdeTweetsBruto = qtdeTweetsBruto;
   }
   }
 }

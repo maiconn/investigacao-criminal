@@ -143,16 +143,18 @@ public class TwitterController {
 
 			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
 			
+			int qtdeTweetsBruto = 0;
+			
 			do {
 				//jompLock.set();
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				if (tweets.size() > 0)
-					ompValidacaoTweet.validaTweets(tweets);
+					qtdeTweetsBruto = ompValidacaoTweet.validaTweets(tweets, qtdeTweetsBruto);
 			} while ((query = result.nextQuery()) != null);
 
 			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			ompMostrarTweets.mostrarTweets();
+			ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);
 			
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);

@@ -27,12 +27,16 @@ public class OmpMostrarTweets_jomp {
 		OMP.setNumThreads(15);
 	}
 	
-	public void mostrarTweets() {
+	public void mostrarTweets(int qtdeTweetsBruto) {
+		
+		int qtdeTweetsValidos = listTweetsFiltrado.size();
 
 // OMP PARALLEL BLOCK BEGINS
 {
   __omp_Class0 __omp_Object0 = new __omp_Class0();
   // shared variables
+  __omp_Object0.qtdeTweetsValidos = qtdeTweetsValidos;
+  __omp_Object0.qtdeTweetsBruto = qtdeTweetsBruto;
   __omp_Object0.listaPerfisFacebook = listaPerfisFacebook;
   __omp_Object0.listaCincoUltimosTweets = listaCincoUltimosTweets;
   __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
@@ -45,17 +49,23 @@ public class OmpMostrarTweets_jomp {
   }
   // reduction variables
   // shared variables
+  qtdeTweetsValidos = __omp_Object0.qtdeTweetsValidos;
+  qtdeTweetsBruto = __omp_Object0.qtdeTweetsBruto;
   listaPerfisFacebook = __omp_Object0.listaPerfisFacebook;
   listaCincoUltimosTweets = __omp_Object0.listaCincoUltimosTweets;
   listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
 }
 // OMP PARALLEL BLOCK ENDS
 
+		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+				           + "\nQuantidade de tweets v\u00e1lidos: " + qtdeTweetsValidos);
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
 private class __omp_Class0 extends jomp.runtime.BusyTask {
   // shared variables
+  int qtdeTweetsValidos;
+  int qtdeTweetsBruto;
   HashMap listaPerfisFacebook;
   HashMap listaCincoUltimosTweets;
   List listTweetsFiltrado;
@@ -128,7 +138,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 				}*/
 
 				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
-				
+								
 				System.out.println(exibirNaTela);
 			}
                                // OMP USER CODE ENDS

@@ -26,7 +26,9 @@ public class OmpMostrarTweets_jomp {
 		OMP.setNumThreads(15);
 	}
 	
-	public void mostrarTweets() {
+	public void mostrarTweets(int qtdeTweetsBruto) {
+		
+		int qtdeTweetsValidos = listTweetsFiltrado.size();
 		
 		//omp parallel
 		{
@@ -63,10 +65,12 @@ public class OmpMostrarTweets_jomp {
 				}*/
 
 				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
-				
+								
 				System.out.println(exibirNaTela);
 			}
 		}
+		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+				           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
 	}
 
 }

@@ -26,9 +26,9 @@ public class OmpValidacaoTweet {
 		OMP.setNumThreads(15);
 	}
 	
-	public void validaTweets(List listTweetsBruto) {
+	public int validaTweets(List listTweetsBruto, int qtdeTweetsBruto) {
 		
-		//omp parallel
+		//omp parallel reduction(+:qtdeTweetsBruto)
 		{
 			if (OMP.getThreadNum() < listTweetsBruto.size()) {
 				if ((tc.isValidTweet((Status)listTweetsBruto.get(OMP.getThreadNum())))) {
@@ -39,6 +39,7 @@ public class OmpValidacaoTweet {
 				} else {
 					listTweetsBruto.set(OMP.getThreadNum(), null);
 				}
+				qtdeTweetsBruto++;
 			}
 		}
 		for (int i = 0; i < listTweetsBruto.size(); i++) {
@@ -60,5 +61,6 @@ public class OmpValidacaoTweet {
 				}
 			}
 		}
+		return qtdeTweetsBruto;
 	}
 }
