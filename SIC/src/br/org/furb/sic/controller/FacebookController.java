@@ -1,5 +1,6 @@
 package br.org.furb.sic.controller;
 
+import br.org.furb.sic.util.StringUtil;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
@@ -38,7 +39,7 @@ public class FacebookController {
 		try {
 			Reading read = new Reading();
 			read.limit(5);
-			ResponseList<User> result = facebook.searchUsers(userName, read);
+			ResponseList<User> result = facebook.searchUsers(StringUtil.normalize(userName), read);
 			
 			if (result == null || result.isEmpty())
 				perfis = "====== Nenhum perfil do Facebook encontrado ======\n";
