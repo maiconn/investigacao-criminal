@@ -58,7 +58,6 @@ public class OmpValidacaoTweet_jomp {
 		for (int i = 0; i < listTweetsBruto.size(); i++) {
 			if (listTweetsBruto.get(i) != null) {
 				Status status = (Status)listTweetsBruto.get(i);
-				OMP.setNumThreads(32);
 
 // OMP PARALLEL BLOCK BEGINS
 {
