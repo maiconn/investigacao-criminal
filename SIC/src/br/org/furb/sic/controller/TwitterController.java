@@ -3,6 +3,7 @@ package br.org.furb.sic.controller;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,6 +137,7 @@ public class TwitterController {
 		HashMap listaPerfisFacebook = new HashMap();
 		int qtdeTweetsBruto = 0;
 		int qtdeTweetsValidos = 0;
+		long inicio = System.currentTimeMillis();
 		
 		try {
 			Query query = new Query(pesquisa);
@@ -170,6 +172,9 @@ public class TwitterController {
 		}
 		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
 				+ "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+		long fim  = System.currentTimeMillis();
+		
+		Main.print("Tempo de execução: " +( new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));		  
 		
 	}
 
