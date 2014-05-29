@@ -27,16 +27,13 @@ public class OmpMostrarTweets_jomp {
 		OMP.setNumThreads(15);
 	}
 	
-	public void mostrarTweets(int qtdeTweetsBruto) {
-		
-		int qtdeTweetsValidos = listTweetsFiltrado.size();
+	public int mostrarTweets(int qtdeTweetsValidos) {
 
 // OMP PARALLEL BLOCK BEGINS
 {
   __omp_Class0 __omp_Object0 = new __omp_Class0();
   // shared variables
   __omp_Object0.qtdeTweetsValidos = qtdeTweetsValidos;
-  __omp_Object0.qtdeTweetsBruto = qtdeTweetsBruto;
   __omp_Object0.listaPerfisFacebook = listaPerfisFacebook;
   __omp_Object0.listaCincoUltimosTweets = listaCincoUltimosTweets;
   __omp_Object0.listTweetsFiltrado = listTweetsFiltrado;
@@ -50,22 +47,21 @@ public class OmpMostrarTweets_jomp {
   // reduction variables
   // shared variables
   qtdeTweetsValidos = __omp_Object0.qtdeTweetsValidos;
-  qtdeTweetsBruto = __omp_Object0.qtdeTweetsBruto;
   listaPerfisFacebook = __omp_Object0.listaPerfisFacebook;
   listaCincoUltimosTweets = __omp_Object0.listaCincoUltimosTweets;
   listTweetsFiltrado = __omp_Object0.listTweetsFiltrado;
 }
 // OMP PARALLEL BLOCK ENDS
 
-		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-				           + "\nQuantidade de tweets v\u00e1lidos: " + qtdeTweetsValidos);
+		return qtdeTweetsValidos;
+		/*System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+				           + "\nQuantidade de tweets v\u00e1lidos: " + qtdeTweetsValidos);*/
 	}
 
 // OMP PARALLEL REGION INNER CLASS DEFINITION BEGINS
 private class __omp_Class0 extends jomp.runtime.BusyTask {
   // shared variables
   int qtdeTweetsValidos;
-  int qtdeTweetsBruto;
   HashMap listaPerfisFacebook;
   HashMap listaCincoUltimosTweets;
   List listTweetsFiltrado;
@@ -83,11 +79,13 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                          // copy of firstprivate variables, initialized
                          // copy of lastprivate variables
                          // variables to hold result of reduction
+                         int _cp_qtdeTweetsValidos;
                          boolean amLast=false;
                          {
                            // firstprivate variables + init
                            // [last]private variables
                            // reduction variables + init to default
+                           int  qtdeTweetsValidos = 0;
                            // -------------------------------------
                            jomp.runtime.LoopData __omp_WholeData2 = new jomp.runtime.LoopData();
                            jomp.runtime.LoopData __omp_ChunkData1 = new jomp.runtime.LoopData();
@@ -140,6 +138,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
 				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
 								
 				System.out.println(exibirNaTela);
+				qtdeTweetsValidos++;
 			}
                                // OMP USER CODE ENDS
                                if (i == (__omp_WholeData2.stop-1)) amLast = true;
@@ -151,6 +150,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                            } // of for(;;)
                            } // of while
                            // call reducer
+                           _cp_qtdeTweetsValidos = (int) jomp.runtime.OMP.doPlusReduce(__omp_me, qtdeTweetsValidos);
                            jomp.runtime.OMP.doBarrier(__omp_me);
                            // copy lastprivate variables out
                            if (amLast) {
@@ -161,6 +161,7 @@ private class __omp_Class0 extends jomp.runtime.BusyTask {
                          }
                          // set global from reduction variables
                          if (jomp.runtime.OMP.getThreadNum(__omp_me) == 0) {
+                           qtdeTweetsValidos+= _cp_qtdeTweetsValidos;
                          }
                          } // OMP FOR BLOCK ENDS
 

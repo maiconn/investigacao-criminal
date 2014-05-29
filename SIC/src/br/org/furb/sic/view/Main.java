@@ -6,7 +6,7 @@ import twitter4j.TwitterException;
 import br.org.furb.sic.controller.TwitterController;
 
 public class Main {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	private static Scanner scan = new Scanner(System.in);
 

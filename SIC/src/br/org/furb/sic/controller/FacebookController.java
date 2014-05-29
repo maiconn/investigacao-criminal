@@ -37,10 +37,10 @@ public class FacebookController {
 		try {
 			ResponseList<User> result = facebook.searchUsers(userName);
 			
-			if (result!=null)
-				perfis = "====== Perfil Facebook ======\n";
-			else
+			if (result == null || result.isEmpty())
 				perfis = "====== Nenhum perfil do Facebook encontrado ======\n";
+			else
+				perfis = "====== Perfil Facebook ======\n";
 
 
 			//for(User p: result){

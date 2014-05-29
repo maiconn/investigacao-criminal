@@ -26,13 +26,13 @@ public class OmpMostrarTweets_jomp {
 		OMP.setNumThreads(15);
 	}
 	
-	public void mostrarTweets(int qtdeTweetsBruto) {
+	public int mostrarTweets(int qtdeTweetsValidos) {
 		
-		int qtdeTweetsValidos = listTweetsFiltrado.size();
+		//int qtdeTweetsValidos = listTweetsFiltrado.size();
 		
 		//omp parallel
 		{
-			//omp for
+			//omp for reduction(+:qtdeTweetsValidos)
 			for (int i = 0; i < listTweetsFiltrado.size(); i++) {
 				
 				String exibirNaTela = "";
@@ -67,10 +67,12 @@ public class OmpMostrarTweets_jomp {
 				exibirNaTela += listaPerfisFacebook.get(tweet.getUser().getId());
 								
 				System.out.println(exibirNaTela);
+				qtdeTweetsValidos++;
 			}
 		}
-		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-				           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+		return qtdeTweetsValidos;
+		/*System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+				           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);*/
 	}
 
 }

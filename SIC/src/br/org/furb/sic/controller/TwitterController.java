@@ -131,7 +131,7 @@ public class TwitterController {
 				.normalizarPadronizarSepararString(pesquisa));
 
 		//Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
-		List listTweetsFiltrado = new ArrayList();
+		List listTweetsFiltrado;// = new ArrayList();
 		HashMap listaCincoUltimosTweets = new HashMap();
 		HashMap listaPerfisFacebook = new HashMap();
 		
@@ -141,20 +141,28 @@ public class TwitterController {
 			
 			//Lock jompLock = new Lock();
 
-			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
+			//OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
 			
 			int qtdeTweetsBruto = 0;
+			int qtdeTweetsValidos = 0;
 			
 			do {
 				//jompLock.set();
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
-				if (tweets.size() > 0)
+				if (tweets.size() > 0) {
+					listTweetsFiltrado = new ArrayList();
+					OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
 					qtdeTweetsBruto = ompValidacaoTweet.validaTweets(tweets, qtdeTweetsBruto);
+					OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
+					qtdeTweetsValidos = ompMostrarTweets.mostrarTweets(qtdeTweetsValidos);
+				}
 			} while ((query = result.nextQuery()) != null);
 
-			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);
+			//OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
+			//ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);
+			System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+			           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
 			
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import br.org.furb.sic.controller.FacebookController;
 import br.org.furb.sic.controller.TwitterController;
+import br.org.furb.sic.view.Main;
 import jomp.runtime.OMP;
 import twitter4j.Status;
 
@@ -45,16 +46,19 @@ public class OmpValidacaoTweet {
 		for (int i = 0; i < listTweetsBruto.size(); i++) {
 			if (listTweetsBruto.get(i) != null) {
 				Status status = (Status)listTweetsBruto.get(i);
+				OMP.setNumThreads(32);
 				//omp parallel
 				{
 					//omp sections
 					{
 						//omp section
 						{
+							Main.print("Buscando os 5 último tweets de " +  status.getUser().getName());
 							listaCincoUltimosTweets.put(status.getUser().getId(), tc.cincoUltimosTweetsUsuario(status.getUser().getId()));
 						}
 						//omp section
 						{
+							Main.print("Buscando Facebook de " +  status.getUser().getName());
 							listaPerfisFacebook.put(status.getUser().getId(), fc.buscaPerfilFacebook(status.getUser().getName()));
 						}
 					}
