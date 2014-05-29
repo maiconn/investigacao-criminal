@@ -160,12 +160,17 @@ public class TwitterController {
 			} while ((query = result.nextQuery()) != null);
 
 			//OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			//ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);			
+			//ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);	
+		}  catch (TwitterException ex) {
+			System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+			           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+			Main.tratarExcessao(ex);
 		}  catch (Exception ex) {
 			Main.tratarExcessao(ex);
 		}
 		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-		           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+				+ "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+		
 	}
 
 	public List<Status> cincoUltimosTweetsUsuario(Status tweet) throws TwitterException, ListaVaziaException {
