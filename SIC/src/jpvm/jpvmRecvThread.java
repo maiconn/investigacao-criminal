@@ -25,12 +25,12 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
-import br.org.furb.sic.controller.jpvm.jpvmDebug;
-import br.org.furb.sic.controller.jpvm.jpvmException;
-import br.org.furb.sic.controller.jpvm.jpvmMessage;
-import br.org.furb.sic.controller.jpvm.jpvmMessageQueue;
-import br.org.furb.sic.controller.jpvm.jpvmRecvConnection;
+package jpvm;
+import jpvm.jpvmDebug;
+import jpvm.jpvmException;
+import jpvm.jpvmMessage;
+import jpvm.jpvmMessageQueue;
+import jpvm.jpvmRecvConnection;
 
 public
 class jpvmRecvThread extends Thread {

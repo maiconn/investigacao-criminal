@@ -25,15 +25,15 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
+package jpvm;
 
 import java.net.*;
 import java.io.*;
 
-import br.org.furb.sic.controller.jpvm.jpvmConnectionSet;
-import br.org.furb.sic.controller.jpvm.jpvmMessageQueue;
-import br.org.furb.sic.controller.jpvm.jpvmRecvThread;
-import br.org.furb.sic.controller.jpvm.jpvmTaskId;
+import jpvm.jpvmConnectionSet;
+import jpvm.jpvmMessageQueue;
+import jpvm.jpvmRecvThread;
+import jpvm.jpvmTaskId;
 
 public
 class jpvmConnectionServer extends Thread {

@@ -24,8 +24,8 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
-import br.org.furb.sic.controller.jpvm.jpvmTaskId;
+package jpvm;
+import jpvm.jpvmTaskId;
 
 public
 class jpvmTaskStatus {

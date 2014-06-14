@@ -1,8 +1,6 @@
-/* jpvmDataType.java
- *
- * Integral constants representing data type names of interest to
- * the jpvm system - i.e. these are the types that can be packed
- * into jpvm buffers.
+/* jpvmConfiguration.java
+ * 
+ * A class containing virtual machine configuration.
  *
  * Adam J Ferrari
  * Sun 05-26-1996
@@ -25,18 +23,24 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
+package jpvm;
+import jpvm.jpvmTaskId;
 
 public
-final class jpvmDataType {
-	public static final int jpvmNull     = 0;
-	public static final int jpvmByte     = 1;
-	public static final int jpvmChar     = 2;
-	public static final int jpvmShort    = 3;
-	public static final int jpvmInteger  = 4;
-	public static final int jpvmLong     = 5;
-	public static final int jpvmFloat    = 6;
-	public static final int jpvmDouble   = 7;
-	public static final int jpvmString   = 8;
-	public static final int jpvmTid	     = 9;
+class jpvmConfiguration {
+	public int		numHosts;
+	public String		hostNames[];
+	public jpvmTaskId	hostDaemonTids[];
+
+	public jpvmConfiguration() {
+		numHosts = 0;
+		hostNames = null;
+		hostDaemonTids	= null;
+	}
+
+	public jpvmConfiguration(int n) {
+		numHosts = n;
+		hostNames = new String[n];
+		hostDaemonTids	= new jpvmTaskId[n];
+	}
 };

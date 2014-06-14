@@ -24,11 +24,11 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
+package jpvm;
 import	java.io.*;
 
-import br.org.furb.sic.controller.jpvm.jpvmDaemonMessageTag;
-import br.org.furb.sic.controller.jpvm.jpvmEnvironment;
+import jpvm.jpvmDaemonMessageTag;
+import jpvm.jpvmEnvironment;
 
 public 
 class jpvmConsole {

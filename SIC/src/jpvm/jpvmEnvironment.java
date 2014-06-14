@@ -24,16 +24,16 @@
  * MA 02139, USA.
  */
 
-package br.org.furb.sic.controller.jpvm;
+package jpvm;
 import java.io.*;
 
-import br.org.furb.sic.controller.jpvm.jpvmConfiguration;
-import br.org.furb.sic.controller.jpvm.jpvmConnectionServer;
-import br.org.furb.sic.controller.jpvm.jpvmConnectionSet;
-import br.org.furb.sic.controller.jpvm.jpvmMessage;
-import br.org.furb.sic.controller.jpvm.jpvmMessageQueue;
-import br.org.furb.sic.controller.jpvm.jpvmTaskId;
-import br.org.furb.sic.controller.jpvm.jpvmTaskStatus;
+import jpvm.jpvmConfiguration;
+import jpvm.jpvmConnectionServer;
+import jpvm.jpvmConnectionSet;
+import jpvm.jpvmMessage;
+import jpvm.jpvmMessageQueue;
+import jpvm.jpvmTaskId;
+import jpvm.jpvmTaskStatus;
 
 public
 class jpvmEnvironment {
