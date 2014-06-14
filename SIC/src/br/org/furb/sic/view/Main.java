@@ -2,6 +2,7 @@ package br.org.furb.sic.view;
 
 import java.util.Scanner;
 
+import jpvm.jpvmException;
 import twitter4j.TwitterException;
 import br.org.furb.sic.controller.TwitterController;
 
@@ -20,7 +21,12 @@ public class Main {
 
 		TwitterController tc = TwitterController.getInstance();
 		//tc.buscaPalavraChave(pesquisa);
-		tc.buscaPalavraChaveOmp(pesquisa);
+//		tc.buscaPalavraChaveOmp(pesquisa);
+		try {
+			tc.buscaPalavraChavePvm(pesquisa);
+		} catch (jpvmException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

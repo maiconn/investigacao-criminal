@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import jpvm.jpvmEnvironment;
+import jpvm.jpvmException;
+import jpvm.jpvmTaskId;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
@@ -15,9 +18,9 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 import br.org.furb.sic.controller.omp.ListaVaziaException;
-import br.org.furb.sic.controller.omp.OmpMostrarTweets;
 import br.org.furb.sic.controller.omp.OmpMostrarTweets_jomp;
 import br.org.furb.sic.controller.omp.OmpValidacaoTweet_jomp;
+import br.org.furb.sic.controller.pvm.Mestre;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.util.StringUtil;
 import br.org.furb.sic.view.Main;
@@ -31,6 +34,7 @@ public class TwitterController {
 	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
 	private static TwitterController instance;
+	private final int NUM_WORKERS = 15;
 
 	private List<String> palavrasChave;
 
@@ -103,7 +107,7 @@ public class TwitterController {
 			}
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
-		} 
+		}
 		System.out.println();
 	}
 
@@ -123,85 +127,97 @@ public class TwitterController {
 		}
 		return true;
 	}
-	
-	
-	
-	
+
 	public synchronized void buscaPalavraChaveOmp(String pesquisa) {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
 
-		//Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
+		// Status[] vetorTweetsBruto;// = new Status[QTDE_TWEETS_BRUTOS];
 		List listTweetsFiltrado = new ArrayList();// = new ArrayList();
 		HashMap listaCincoUltimosTweets = new HashMap();
 		HashMap listaPerfisFacebook = new HashMap();
 		int qtdeTweetsBruto = 0;
 		int qtdeTweetsValidos = 0;
 		long inicio = System.currentTimeMillis();
-		
+
 		try {
 			Query query = new Query(pesquisa);
 			QueryResult result;
-			
-			//Lock jompLock = new Lock();
 
-			//OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			
-			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
+			// Lock jompLock = new Lock();
+
+			// OmpValidacaoTweet_jomp ompValidacaoTweet = new
+			// OmpValidacaoTweet_jomp(listTweetsFiltrado,
+			// listaCincoUltimosTweets, listaPerfisFacebook);
+
+			OmpValidacaoTweet_jomp ompValidacaoTweet = new OmpValidacaoTweet_jomp(
+					listTweetsFiltrado, listaCincoUltimosTweets,
+					listaPerfisFacebook);
+			OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(
+					listTweetsFiltrado, listaCincoUltimosTweets,
+					listaPerfisFacebook);
 			do {
-				//jompLock.set();
+				// jompLock.set();
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				if (tweets.size() > 0) {
 					listTweetsFiltrado.clear();
-					
-					qtdeTweetsBruto = ompValidacaoTweet.validaTweets(tweets, qtdeTweetsBruto);
-					qtdeTweetsValidos = ompMostrarTweets.mostrarTweets(qtdeTweetsValidos);
+
+					qtdeTweetsBruto = ompValidacaoTweet.validaTweets(tweets,
+							qtdeTweetsBruto);
+					qtdeTweetsValidos = ompMostrarTweets
+							.mostrarTweets(qtdeTweetsValidos);
 				}
 			} while ((query = result.nextQuery()) != null);
 
-			//OmpMostrarTweets_jomp ompMostrarTweets = new OmpMostrarTweets_jomp(listTweetsFiltrado, listaCincoUltimosTweets, listaPerfisFacebook);
-			//ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);	
-		}  catch (TwitterException ex) {
-			System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-			           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+			// OmpMostrarTweets_jomp ompMostrarTweets = new
+			// OmpMostrarTweets_jomp(listTweetsFiltrado,
+			// listaCincoUltimosTweets, listaPerfisFacebook);
+			// ompMostrarTweets.mostrarTweets(qtdeTweetsBruto);
+		} catch (TwitterException ex) {
+			System.out.println("\n\nQuantidade total de tweets encontrados: "
+					+ qtdeTweetsBruto + "\nQuantidade de tweets válidos: "
+					+ qtdeTweetsValidos);
 			Main.tratarExcessao(ex);
-		}  catch (Exception ex) {
+		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
 		}
-		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-				+ "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
-		long fim  = System.currentTimeMillis();
-		
-		Main.print("Tempo de execução: " +( new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));		  
-		
+		System.out.println("\n\nQuantidade total de tweets encontrados: "
+				+ qtdeTweetsBruto + "\nQuantidade de tweets válidos: "
+				+ qtdeTweetsValidos);
+		long fim = System.currentTimeMillis();
+
+		Main.print("Tempo de execução: "
+				+ (new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));
+
 	}
 
-	public List<Status> cincoUltimosTweetsUsuario(Status tweet) throws TwitterException, ListaVaziaException {
+	public List<Status> cincoUltimosTweetsUsuario(Status tweet)
+			throws TwitterException, ListaVaziaException {
 		List<Status> cincoUltimosTweets;
 		cincoUltimosTweets = twitter.getUserTimeline(tweet.getUser().getId());
-		
+
 		if (cincoUltimosTweets.size() == 0) {
 			throw new ListaVaziaException();
 		}
 		try {
 			return cincoUltimosTweets.subList(0, 5);
 		} catch (IndexOutOfBoundsException e) {
-			return cincoUltimosTweets.subList(0, cincoUltimosTweets.size()-1);
+			return cincoUltimosTweets.subList(0, cincoUltimosTweets.size() - 1);
 		}
 	}
-	
+
 	public String cincoUltimosTweetsUsuario(long idUsuario) {
 		int i = 0;
 		String result = "";
-		
+
 		try {
 			List<Status> cincoUltimosTweets;
 			cincoUltimosTweets = twitter.getUserTimeline(idUsuario);
-			
+
 			for (i = 0; i < 5; i++) {
-				result += " -> " + ((Status) cincoUltimosTweets.get(i)).getText() + "\n";
+				result += " -> "
+						+ ((Status) cincoUltimosTweets.get(i)).getText() + "\n";
 			}
 		} catch (IndexOutOfBoundsException e) {
 			if (i == 0) {
@@ -212,58 +228,64 @@ public class TwitterController {
 		}
 		return result;
 	}
-	
-	
-	
-	
-	public void buscaPalavraChavePvm(String pesquisa) {
+
+	public void buscaPalavraChavePvm(String pesquisa) throws jpvmException {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
 
 		List<Status> listTweetsFiltrado = new ArrayList<Status>();
-		HashMap<Long,Status> listaCincoUltimosTweets = new HashMap<Long,Status>();
-		HashMap<Long,Status> listaPerfisFacebook = new HashMap<Long,Status>();
+		HashMap<Long, Status> listaCincoUltimosTweets = new HashMap<Long, Status>();
+		HashMap<Long, Status> listaPerfisFacebook = new HashMap<Long, Status>();
 		int qtdeTweetsBruto = 0;
 		int qtdeTweetsValidos = 0;
 		long inicio = System.currentTimeMillis();
-		
+
 		try {
 			Query query = new Query(pesquisa);
 			QueryResult result;
+			jpvmEnvironment jpvm = new jpvmEnvironment();
+			jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
+			jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
+					NUM_WORKERS, tids);
+			for (int i = 0; i < NUM_WORKERS; i++)
+				System.out.println("\t" + tids[i].toString());
 
 			do {
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				if (tweets.size() > 0) {
-					listTweetsFiltrado.clear();
-					
-					for (Status status : tweets) {
-						//Acordar os escravos para validar os paranauê
-						//Acordar os escravos para pegar os 5 tweets e os Facebooks
+					try {
+						for (int i = 0; i < tids.length; i++) {
+							Status tweet = tweets.get(i);
+							jpvmTaskId tid = tids[i];
+							Mestre.enviarValidacaoTweet(tweet, jpvm, tid);
+						}
+					} catch (ArrayIndexOutOfBoundsException ex) {
+
 					}
+//					for (int i = 0; i < tids.length; i++) {
+//						Mestre.receberValidacao(jpvm);
+//					}
+					// exibir
 				}
 			} while ((query = result.nextQuery()) != null);
 
-		}  catch (TwitterException ex) {
-			System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-			           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+		} catch (TwitterException ex) {
+			System.out.println("\n\nQuantidade total de tweets encontrados: "
+					+ qtdeTweetsBruto + "\nQuantidade de tweets válidos: "
+					+ qtdeTweetsValidos);
 			Main.tratarExcessao(ex);
-		}  catch (Exception ex) {
+		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
 		}
-		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
-				+ "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
-		long fim  = System.currentTimeMillis();
-		
-		Main.print("Tempo de execução: " +( new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));		  
-		
+		System.out.println("\n\nQuantidade total de tweets encontrados: "
+				+ qtdeTweetsBruto + "\nQuantidade de tweets válidos: "
+				+ qtdeTweetsValidos);
+		long fim = System.currentTimeMillis();
+
+		Main.print("Tempo de execução: "
+				+ (new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));
+
 	}
-	
-	
-	
-	
-	
-	
-	
 
 }

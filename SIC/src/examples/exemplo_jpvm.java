@@ -1,17 +1,13 @@
 package examples;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 import jpvm.jpvmBuffer;
 import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
 import jpvm.jpvmMessage;
 import jpvm.jpvmTaskId;
+import br.org.furb.sic.util.SerialUtil;
 
 public class exemplo_jpvm {
 
@@ -42,7 +38,7 @@ public class exemplo_jpvm {
 					TesteSerial teste = new TesteSerial("MAICON GOSTOSAO");
 					jpvmBuffer buf = new jpvmBuffer();
 					try {
-						buf.pack(toString(teste));
+						buf.pack(SerialUtil.toString(teste));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -77,7 +73,7 @@ public class exemplo_jpvm {
 				String str = message.buffer.upkstr();
 				TesteSerial teste = null;
 				try {
-					teste = (TesteSerial) fromString(str);
+					teste = (TesteSerial) SerialUtil.fromString(str);
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -114,28 +110,5 @@ public class exemplo_jpvm {
 
 	}
 
-	/**
-	 * Read the object from Base64 string.
-	 * 
-	 * @throws ClassNotFoundException
-	 */
-	private static Object fromString(String s) throws IOException,
-			ClassNotFoundException {
-		byte[] data = Base64Coder.decode(s);
-		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(
-				data));
-		Object o = ois.readObject();
-		ois.close();
-		return o;
-	}
-
-	/** Write the object to a Base64 string. */
-	private static String toString(Serializable o) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject(o);
-		oos.close();
-		return new String(Base64Coder.encode(baos.toByteArray()));
-	}
 
 }
