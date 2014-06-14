@@ -24,14 +24,15 @@
  * MA 02139, USA.
  */
 
-package jpvm;
-import jpvm.jpvmException;
-import jpvm.jpvmDataType;
-import jpvm.jpvmDebug;
-import jpvm.jpvmSendConnection;
-import jpvm.jpvmRecvConnection;
-import jpvm.jpvmTaskId;
+package br.org.furb.sic.controller.jpvm;
 import java.io.*;
+
+import br.org.furb.sic.controller.jpvm.jpvmDataType;
+import br.org.furb.sic.controller.jpvm.jpvmDebug;
+import br.org.furb.sic.controller.jpvm.jpvmException;
+import br.org.furb.sic.controller.jpvm.jpvmRecvConnection;
+import br.org.furb.sic.controller.jpvm.jpvmSendConnection;
+import br.org.furb.sic.controller.jpvm.jpvmTaskId;
 
 class jpvmBufferElementContents implements Serializable {
 	public int 		dataType;

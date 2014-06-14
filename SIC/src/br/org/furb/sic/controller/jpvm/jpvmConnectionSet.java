@@ -24,11 +24,11 @@
  * MA 02139, USA.
  */
 
-package jpvm;
+package br.org.furb.sic.controller.jpvm;
 
-import jpvm.jpvmSendConnection;
-import jpvm.jpvmRecvConnection;
-import jpvm.jpvmTaskId;
+import br.org.furb.sic.controller.jpvm.jpvmRecvConnection;
+import br.org.furb.sic.controller.jpvm.jpvmSendConnection;
+import br.org.furb.sic.controller.jpvm.jpvmTaskId;
 
 class jpvmSendConnectionListNode {
 	public jpvmSendConnection		conn;

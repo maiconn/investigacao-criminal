@@ -27,10 +27,11 @@
  * MA 02139, USA.
  */
 
-package jpvm;
-import  jpvm.jpvmEnvironment;
-import  jpvm.jpvmDaemonMessageTag;
+package br.org.furb.sic.controller.jpvm;
 import  java.io.*;
+
+import br.org.furb.sic.controller.jpvm.jpvmDaemonMessageTag;
+import br.org.furb.sic.controller.jpvm.jpvmEnvironment;
 
 class jpvmTaskListRecord {
 	public jpvmTaskId		tid;

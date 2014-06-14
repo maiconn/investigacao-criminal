@@ -23,7 +23,7 @@
  * MA 02139, USA.
  */
 
-package jpvm;
+package br.org.furb.sic.controller.jpvm;
 
 public final
 class jpvmDaemonMessageTag {

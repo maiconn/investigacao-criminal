@@ -25,7 +25,7 @@
  * MA 02139, USA.
  */
 
-package jpvm;
+package br.org.furb.sic.controller.jpvm;
 
 class jpvmMessageQueueElement {
 	public	jpvmMessage 		message;

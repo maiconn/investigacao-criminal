@@ -24,12 +24,13 @@
  * MA 02139, USA.
  */
 
-package jpvm;
-import jpvm.jpvmDataType;
-import jpvm.jpvmException;
-import jpvm.jpvmBuffer;
-import jpvm.jpvmTaskId;
+package br.org.furb.sic.controller.jpvm;
 import java.io.*;
+
+import br.org.furb.sic.controller.jpvm.jpvmBuffer;
+import br.org.furb.sic.controller.jpvm.jpvmDataType;
+import br.org.furb.sic.controller.jpvm.jpvmException;
+import br.org.furb.sic.controller.jpvm.jpvmTaskId;
 
 public
 class jpvmMessage {
