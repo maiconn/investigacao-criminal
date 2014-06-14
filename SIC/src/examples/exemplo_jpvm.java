@@ -23,7 +23,7 @@ public class exemplo_jpvm {
 				//ÃƒÂ© o master
 				System.out.println("inicializado como master");
 				jpvmTaskId tids[] = new jpvmTaskId[num_workers];
-				jpvm.pvm_spawn("Implementation.hellov2", num_workers, tids);
+				jpvm.pvm_spawn("examples.exemplo_jpvm", num_workers, tids);
 				
 				System.out.println("workers taks: ");
 				int i;
