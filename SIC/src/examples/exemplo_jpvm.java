@@ -3,10 +3,9 @@ package examples;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import jpvm.jpvmBuffer;
 import jpvm.jpvmEnvironment;
@@ -40,10 +39,14 @@ public class exemplo_jpvm {
 
 				for (i = 0; i < num_workers; i++) {
 					System.out.println("mandando mensagem para o worker " + i);
+					TesteSerial teste = new TesteSerial("MAICON GOSTOSAO");
 					jpvmBuffer buf = new jpvmBuffer();
-					buf.pack("servidor, id: " + jpvm.pvm_mytid().toString());
+					try {
+						buf.pack(toString(teste));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 
-					// TesteSerial teste = new TesteSerial("MAICON GOSTOSAO");
 					// ObjectOutput out = null;
 					// byte[] yourBytes = null;
 					// ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -72,7 +75,14 @@ public class exemplo_jpvm {
 
 				jpvmMessage message = jpvm.pvm_recv();
 				String str = message.buffer.upkstr();
-
+				TesteSerial teste = null;
+				try {
+					teste = (TesteSerial) fromString(str);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				// byte[] retorno = null;
 				// message.buffer.unpack(retorno, 1, 1);
 				//
@@ -86,13 +96,14 @@ public class exemplo_jpvm {
 				//
 				// }
 
-				System.out.println("recebeu : " + str);
+				System.out.println("recebeu : " + teste.getNome());
 				System.out.println("com a tag " + message.messageTag + " from "
 						+ message.sourceTid.toString());
 
 				System.out.println("preparando resposta.");
 				jpvmBuffer buf = new jpvmBuffer();
-				buf.pack(str + " cliente : " + jpvm.pvm_mytid().toString());
+				buf.pack(teste.getNome() + " cliente : "
+						+ jpvm.pvm_mytid().toString());
 				jpvm.pvm_send(buf, masterTaskId, 0);
 				System.out.println("mando resposta.");
 			}
@@ -101,6 +112,30 @@ public class exemplo_jpvm {
 			e.printStackTrace(System.out);
 		}
 
+	}
+
+	/**
+	 * Read the object from Base64 string.
+	 * 
+	 * @throws ClassNotFoundException
+	 */
+	private static Object fromString(String s) throws IOException,
+			ClassNotFoundException {
+		byte[] data = Base64Coder.decode(s);
+		ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(
+				data));
+		Object o = ois.readObject();
+		ois.close();
+		return o;
+	}
+
+	/** Write the object to a Base64 string. */
+	private static String toString(Serializable o) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(baos);
+		oos.writeObject(o);
+		oos.close();
+		return new String(Base64Coder.encode(baos.toByteArray()));
 	}
 
 }
