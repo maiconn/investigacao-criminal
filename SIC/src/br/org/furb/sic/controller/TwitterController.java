@@ -212,5 +212,58 @@ public class TwitterController {
 		}
 		return result;
 	}
+	
+	
+	
+	
+	public void buscaPalavraChavePvm(String pesquisa) {
+		this.palavrasChave = Arrays.asList(StringUtil
+				.normalizarPadronizarSepararString(pesquisa));
+
+		List<Status> listTweetsFiltrado = new ArrayList<Status>();
+		HashMap<Long,Status> listaCincoUltimosTweets = new HashMap<Long,Status>();
+		HashMap<Long,Status> listaPerfisFacebook = new HashMap<Long,Status>();
+		int qtdeTweetsBruto = 0;
+		int qtdeTweetsValidos = 0;
+		long inicio = System.currentTimeMillis();
+		
+		try {
+			Query query = new Query(pesquisa);
+			QueryResult result;
+
+			do {
+				result = twitter.search(query);
+				List<Status> tweets = result.getTweets();
+				if (tweets.size() > 0) {
+					listTweetsFiltrado.clear();
+					
+					for (Status status : tweets) {
+						//Acordar os escravos para validar os paranauê
+						//Acordar os escravos para pegar os 5 tweets e os Facebooks
+					}
+				}
+			} while ((query = result.nextQuery()) != null);
+
+		}  catch (TwitterException ex) {
+			System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+			           + "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+			Main.tratarExcessao(ex);
+		}  catch (Exception ex) {
+			Main.tratarExcessao(ex);
+		}
+		System.out.println("\n\nQuantidade total de tweets encontrados: " + qtdeTweetsBruto
+				+ "\nQuantidade de tweets válidos: " + qtdeTweetsValidos);
+		long fim  = System.currentTimeMillis();
+		
+		Main.print("Tempo de execução: " +( new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));		  
+		
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }
