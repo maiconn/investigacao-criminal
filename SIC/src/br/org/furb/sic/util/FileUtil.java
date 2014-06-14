@@ -17,7 +17,7 @@ public final class FileUtil {
 		}
 
 		BufferedWriter writer = new BufferedWriter(new FileWriter(originalFile,
-				false));
+				true));
 		writer.write(texto);
 		writer.flush();
 		writer.close();

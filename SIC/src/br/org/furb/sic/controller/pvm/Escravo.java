@@ -1,13 +1,17 @@
 package br.org.furb.sic.controller.pvm;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import jpvm.jpvmBuffer;
 import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
 import jpvm.jpvmMessage;
-import twitter4j.Status;
 import br.org.furb.sic.controller.TwitterController;
+import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.FileUtil;
 import br.org.furb.sic.util.SerialUtil;
 
@@ -16,7 +20,7 @@ public class Escravo {
 
 		jpvmEnvironment jpvm = null;
 		try {
-//			log("inicializado como escravo.");
+			// log("inicializado como escravo.");
 			jpvm = new jpvmEnvironment();
 			jpvmMessage message = jpvm.pvm_recv();
 
@@ -29,7 +33,9 @@ public class Escravo {
 				break;
 			case VALIDAR:
 				String str = message.buffer.upkstr();
-				Status tweet = (Status) SerialUtil.fromString(str);
+				log(str);
+				Tweet tweet = (Tweet) SerialUtil.fromString(str);
+
 				int valido = TwitterController.getInstance()
 						.isValidTweet(tweet) == true ? 1 : 0;
 				jpvmBuffer buf = new jpvmBuffer();
@@ -48,14 +54,21 @@ public class Escravo {
 			log(e.getMessage());
 			e.printStackTrace();
 		} catch (Exception ex) {
-			log(ex.getMessage());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			log(sw.toString());
 			ex.printStackTrace();
 		}
 	}
-//
+
+	//
 	private static void log(String texto) {
 		try {
-			FileUtil.writeFile(texto+"\n", "C:\\temp\\log.txt");
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyy HH:mm");
+			String data = format.format(new Date());
+			FileUtil.writeFile("\n[" + data + "] " + texto + "\n",
+					"C:\\temp\\log.txt");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

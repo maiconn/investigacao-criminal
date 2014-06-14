@@ -22,6 +22,7 @@ import br.org.furb.sic.controller.omp.OmpMostrarTweets_jomp;
 import br.org.furb.sic.controller.omp.OmpValidacaoTweet_jomp;
 import br.org.furb.sic.controller.pvm.Mestre;
 import br.org.furb.sic.model.ListaTweets;
+import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.StringUtil;
 import br.org.furb.sic.view.Main;
 
@@ -111,15 +112,20 @@ public class TwitterController {
 		System.out.println();
 	}
 
+	public boolean isValidTweet(Tweet tweet) {
+		List<String> palavrasTweet = Arrays.asList(StringUtil
+				.normalizarPadronizarSepararString(tweet.getTweet().getText()));
+		for (String palavra : tweet.getPalavrasChave()) {
+			if (!palavrasTweet.contains(palavra)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public boolean isValidTweet(Status tweet) {
 		List<String> palavrasTweet = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(tweet.getText()));
-		// if(Main.DEBUG){
-		// Main.print(getClass(),
-		// "palavras da pesquisa:"+palavrasChave.toString());
-		// Main.print(getClass(),
-		// "palavras do tweet:"+palavrasTweet.toString());
-		// }
 		for (String palavra : palavrasChave) {
 			if (!palavrasTweet.contains(palavra)) {
 				return false;
@@ -257,15 +263,20 @@ public class TwitterController {
 					try {
 						for (int i = 0; i < tids.length; i++) {
 							Status tweet = tweets.get(i);
+							Tweet tweetWrapper = new Tweet(tweet,
+									this.palavrasChave);
+
 							jpvmTaskId tid = tids[i];
-							Mestre.enviarValidacaoTweet(tweet, jpvm, tid);
+
+							Mestre.enviarValidacaoTweet(tweetWrapper, jpvm, tid);
 						}
 					} catch (ArrayIndexOutOfBoundsException ex) {
 
 					}
-//					for (int i = 0; i < tids.length; i++) {
-//						Mestre.receberValidacao(jpvm);
-//					}
+					break;
+					// for (int i = 0; i < tids.length; i++) {
+					// Mestre.receberValidacao(jpvm);
+					// }
 					// exibir
 				}
 			} while ((query = result.nextQuery()) != null);
