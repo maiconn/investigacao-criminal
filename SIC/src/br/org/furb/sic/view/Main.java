@@ -2,12 +2,11 @@ package br.org.furb.sic.view;
 
 import java.util.Scanner;
 
-import jpvm.jpvmException;
 import twitter4j.TwitterException;
 import br.org.furb.sic.controller.TwitterController;
 
 public class Main {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	private static Scanner scan = new Scanner(System.in);
 
@@ -20,13 +19,9 @@ public class Main {
 		System.out.println("RESULTADOS");
 
 		TwitterController tc = TwitterController.getInstance();
-		//tc.buscaPalavraChave(pesquisa);
-//		tc.buscaPalavraChaveOmp(pesquisa);
-		try {
-			tc.buscaPalavraChavePvm(pesquisa);
-		} catch (jpvmException e) {
-			e.printStackTrace();
-		}
+		// tc.buscaPalavraChave(pesquisa);
+		// tc.buscaPalavraChaveOmp(pesquisa);
+		tc.buscaPalavraChavePvm(pesquisa);
 	}
 
 	/**

@@ -1,11 +1,14 @@
 package br.org.furb.sic.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
@@ -21,6 +24,7 @@ import br.org.furb.sic.controller.omp.ListaVaziaException;
 import br.org.furb.sic.controller.omp.OmpMostrarTweets_jomp;
 import br.org.furb.sic.controller.omp.OmpValidacaoTweet_jomp;
 import br.org.furb.sic.controller.pvm.Mestre;
+import br.org.furb.sic.controller.pvm.Tag;
 import br.org.furb.sic.model.ListaTweets;
 import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.StringUtil;
@@ -35,7 +39,7 @@ public class TwitterController {
 	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
 	private static TwitterController instance;
-	private final int NUM_WORKERS = 15;
+	private final int NUM_WORKERS = 45;
 
 	private List<String> palavrasChave;
 
@@ -44,6 +48,18 @@ public class TwitterController {
 			instance = new TwitterController();
 		}
 		return instance;
+	}
+
+	private TwitterController(String twitterConsumerKey,
+			String twitterScretKey, String twitterAcessToken,
+			String twitteAcessTokenSecret) {
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true).setOAuthConsumerKey(TWITTER_CONSUMER_KEY)
+				.setOAuthConsumerSecret(TWITTER_SECRET_KEY)
+				.setOAuthAccessToken(TWITTER_ACCESS_TOKEN)
+				.setOAuthAccessTokenSecret(TWITTER_ACCESS_TOKEN_SECRET);
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		twitter = tf.getInstance();
 	}
 
 	private TwitterController() {
@@ -134,6 +150,7 @@ public class TwitterController {
 		return true;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public synchronized void buscaPalavraChaveOmp(String pesquisa) {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
@@ -230,18 +247,20 @@ public class TwitterController {
 				result = "Nenhum tweet recente.\n";
 			}
 		} catch (TwitterException ex) {
-			result = "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			String stackTrace = sw.toString();
+			result = stackTrace;
+			// result =
+			// "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
 		}
 		return result;
 	}
 
-	public void buscaPalavraChavePvm(String pesquisa) throws jpvmException {
+	public void buscaPalavraChavePvm(String pesquisa) {
 		this.palavrasChave = Arrays.asList(StringUtil
 				.normalizarPadronizarSepararString(pesquisa));
-
-		List<Status> listTweetsFiltrado = new ArrayList<Status>();
-		HashMap<Long, Status> listaCincoUltimosTweets = new HashMap<Long, Status>();
-		HashMap<Long, Status> listaPerfisFacebook = new HashMap<Long, Status>();
 		int qtdeTweetsBruto = 0;
 		int qtdeTweetsValidos = 0;
 		long inicio = System.currentTimeMillis();
@@ -259,25 +278,48 @@ public class TwitterController {
 			do {
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
+				Map<Long, Tweet> tweetsRecebidos = new HashMap<Long, Tweet>();
 				if (tweets.size() > 0) {
-					try {
-						for (int i = 0; i < tids.length; i++) {
-							Status tweet = tweets.get(i);
-							Tweet tweetWrapper = new Tweet(tweet,
-									this.palavrasChave);
 
-							jpvmTaskId tid = tids[i];
+					// ENVIA AOS ESCRAVOS
+					int proxTID = -1;
+					for (Status tweet : tweets) {
+						qtdeTweetsBruto++;
+						Tweet tweetWrapper = new Tweet(tweet,
+								this.palavrasChave);
+						tweetsRecebidos.put(tweet.getId(), tweetWrapper);
 
-							Mestre.enviarValidacaoTweet(tweetWrapper, jpvm, tid);
-						}
-					} catch (ArrayIndexOutOfBoundsException ex) {
+						proxTID++;
+						jpvmTaskId tid1 = tids[proxTID];
+						proxTID++;
+						jpvmTaskId tid2 = tids[proxTID];
+						proxTID++;
+						jpvmTaskId tid3 = tids[proxTID];
 
+						Mestre.enviar(tweetWrapper, Tag.ENVIAR_VALIDAR, jpvm,
+								tid1);
+						Mestre.enviar(tweetWrapper, Tag.ENVIAR_BUSCA_TWEETS,
+								jpvm, tid2);
+						Mestre.enviar(tweetWrapper, Tag.ENVIAR_BUSCA_FACEBOOK,
+								jpvm, tid3);
 					}
+
+					// ENVIA RECEBE DOS ESCRAVOS
+					for (int i = 0; i < tweets.size(); i++) {
+						Mestre.receber(tweetsRecebidos, jpvm);
+						Mestre.receber(tweetsRecebidos, jpvm);
+						Mestre.receber(tweetsRecebidos, jpvm);
+					}
+
+					// IMPRIME NA TELA
+					for (Tweet tweet : tweetsRecebidos.values()) {
+						if (tweet.isValido()) {
+							qtdeTweetsValidos++;
+							System.out.println(tweet.toString());
+						}
+					}
+
 					break;
-					// for (int i = 0; i < tids.length; i++) {
-					// Mestre.receberValidacao(jpvm);
-					// }
-					// exibir
 				}
 			} while ((query = result.nextQuery()) != null);
 
@@ -286,6 +328,8 @@ public class TwitterController {
 					+ qtdeTweetsBruto + "\nQuantidade de tweets válidos: "
 					+ qtdeTweetsValidos);
 			Main.tratarExcessao(ex);
+		} catch (jpvmException e) {
+			e.printStackTrace();
 		} catch (Exception ex) {
 			Main.tratarExcessao(ex);
 		}
@@ -294,8 +338,10 @@ public class TwitterController {
 				+ qtdeTweetsValidos);
 		long fim = System.currentTimeMillis();
 
-		Main.print("Tempo de execução: "
-				+ (new SimpleDateFormat("mm:ss").format(new Date(fim - inicio))));
+		System.out
+				.println("Tempo de execução: "
+						+ (new SimpleDateFormat("mm:ss").format(new Date(fim
+								- inicio))));
 
 	}
 
