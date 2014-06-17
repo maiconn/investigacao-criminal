@@ -1,6 +1,7 @@
 package br.org.furb.sic.controller;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,8 +31,8 @@ import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.StringUtil;
 import br.org.furb.sic.view.Main;
 
-public class TwitterController {
-
+public class TwitterController implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private final String TWITTER_CONSUMER_KEY = "9wCm1u34L3pLVYnvOiFIKPHSi";
 	private final String TWITTER_SECRET_KEY = "SoqKvwPy2pi19twgc82qBENGOeuJhCkLQOXpebTbBYXkCdVNLk";
 	private final String TWITTER_ACCESS_TOKEN = "2460706994-2ztrCLNxNYe574qQJBJVQdVjlFm2bOI3yxA8cdO";
@@ -286,7 +287,7 @@ public class TwitterController {
 					for (Status tweet : tweets) {
 						qtdeTweetsBruto++;
 						Tweet tweetWrapper = new Tweet(tweet,
-								this.palavrasChave);
+								this.palavrasChave, instance);
 						tweetsRecebidos.put(tweet.getId(), tweetWrapper);
 
 						proxTID++;

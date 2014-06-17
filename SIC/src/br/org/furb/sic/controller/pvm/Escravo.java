@@ -48,7 +48,7 @@ public class Escravo {
 						Tag.RECEBER_BUSCA_FACEBOOK.ordinal());
 				break;
 			case ENVIAR_BUSCA_TWEETS:
-				String cincoUltimosTweets = twitterController
+				String cincoUltimosTweets = tweet.getTwitterController()
 						.cincoUltimosTweetsUsuario(tweet.getTweet().getId());
 
 				buf.pack(tweet.getTweet().getId());
@@ -114,7 +114,8 @@ public class Escravo {
 
 	private static void log(String texto) {
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyy HH:mm:ss.SSS");
+			SimpleDateFormat format = new SimpleDateFormat(
+					"dd/MM/yyy HH:mm:ss.SSS");
 			String data = format.format(new Date());
 			FileUtil.writeFile("[" + data + "] " + texto + "\n",
 					"C:\\temp\\log.txt");

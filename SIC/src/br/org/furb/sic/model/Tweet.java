@@ -5,18 +5,22 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import twitter4j.Status;
+import br.org.furb.sic.controller.TwitterController;
 
 @SuppressWarnings("serial")
 public class Tweet implements Serializable {
 	private Status tweet;
+	private TwitterController twitterController;
 	private List<String> palavrasChave;
 	private String listaCincoUltimosTweets;
 	private String listaPossiveisPerfisFacebook;
 	private boolean valido;
 
-	public Tweet(Status tweet, List<String> palavrasChave) {
+	public Tweet(Status tweet, List<String> palavrasChave,
+			TwitterController controller) {
 		this.tweet = tweet;
 		this.palavrasChave = palavrasChave;
+		this.twitterController = controller;
 	}
 
 	public void setValido(boolean valido) {
@@ -52,6 +56,10 @@ public class Tweet implements Serializable {
 		this.listaCincoUltimosTweets = listaCincoUltimosTweets;
 	}
 
+	public TwitterController getTwitterController() {
+		return twitterController;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder str = new StringBuilder();
@@ -67,7 +75,7 @@ public class Tweet implements Serializable {
 		str.append(listaCincoUltimosTweets);
 		str.append("==== POSSÍVEIS PERFIS FACEBOOK ====\n");
 		str.append(listaPossiveisPerfisFacebook + "\n");
-		
+
 		return str.toString();
 	}
 }
