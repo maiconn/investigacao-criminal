@@ -11,7 +11,6 @@ import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
 import jpvm.jpvmMessage;
 import br.org.furb.sic.controller.FacebookController;
-import br.org.furb.sic.controller.TwitterController;
 import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.FileUtil;
 import br.org.furb.sic.util.SerialUtil;
@@ -23,8 +22,6 @@ public class Escravo {
 		try {
 			jpvm = new jpvmEnvironment();
 			jpvmMessage message = jpvm.pvm_recv();
-			TwitterController twitterController = TwitterController
-					.getInstance();
 
 			Tag tag = Tag.getTag(message.messageTag);
 			log("TAG: [" + tag.name() + "] RECEBIDA");
@@ -58,7 +55,7 @@ public class Escravo {
 						Tag.RECEBER_BUSCA_TWEET.ordinal());
 				break;
 			case ENVIAR_VALIDAR:
-				int valido = twitterController.isValidTweet(tweet) == true ? 1
+				int valido = tweet.getTwitterController().isValidTweet(tweet) == true ? 1
 						: 0;
 
 				buf.pack(tweet.getTweet().getId());
@@ -74,6 +71,7 @@ public class Escravo {
 				break;
 			}
 		} catch (jpvmException e) {
+			log(e.getMessage());
 			String stackTrace = logStackTraceTrowable(e);
 			try {
 				jpvmBuffer buf = new jpvmBuffer();
@@ -83,6 +81,7 @@ public class Escravo {
 				logStackTraceTrowable(e);
 			}
 		} catch (Exception ex) {
+			log(ex.getMessage());
 			String stackTrace = logStackTraceException(ex);
 			try {
 				jpvmBuffer buf = new jpvmBuffer();

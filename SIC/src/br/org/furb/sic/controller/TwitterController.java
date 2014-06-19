@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
 import jpvm.jpvmTaskId;
@@ -31,7 +33,7 @@ import br.org.furb.sic.model.Tweet;
 import br.org.furb.sic.util.StringUtil;
 import br.org.furb.sic.view.Main;
 
-public class TwitterController implements Serializable{
+public class TwitterController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final String TWITTER_CONSUMER_KEY = "9wCm1u34L3pLVYnvOiFIKPHSi";
 	private final String TWITTER_SECRET_KEY = "SoqKvwPy2pi19twgc82qBENGOeuJhCkLQOXpebTbBYXkCdVNLk";
@@ -46,6 +48,7 @@ public class TwitterController implements Serializable{
 
 	public static TwitterController getInstance() {
 		if (instance == null) {
+			JOptionPane.showMessageDialog(null, "NOVA INSTANCIA");
 			instance = new TwitterController();
 		}
 		return instance;
