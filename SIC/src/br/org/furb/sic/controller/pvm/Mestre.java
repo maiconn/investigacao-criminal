@@ -13,7 +13,7 @@ import br.org.furb.sic.model.exception.JpvmException;
 import br.org.furb.sic.util.SerialUtil;
 import br.org.furb.sic.view.Main;
 
-public class Mestre {
+public final class Mestre {
 	private Mestre() {
 	}
 
@@ -34,7 +34,7 @@ public class Mestre {
 		jpvmMessage message = jpvm.pvm_recv();
 
 		Tag tag = Tag.getTag(message.messageTag);
-		System.out.println(tag.name());
+//		System.out.println(tag.name());
 		Long tweetId = message.buffer.upklong();
 		Tweet tweet = tweetsRecebidos.get(tweetId);
 

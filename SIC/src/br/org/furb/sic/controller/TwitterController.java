@@ -324,6 +324,7 @@ public class TwitterController implements Serializable {
 						}
 					}
 
+					jpvm.pvm_exit();
 					// break;
 				}
 			} while ((query = result.nextQuery()) != null);
