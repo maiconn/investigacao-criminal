@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import jpvm.jpvmEnvironment;
 import jpvm.jpvmException;
 import jpvm.jpvmTaskId;
@@ -48,7 +46,6 @@ public class TwitterController implements Serializable {
 
 	public static TwitterController getInstance() {
 		if (instance == null) {
-			JOptionPane.showMessageDialog(null, "NOVA INSTANCIA");
 			instance = new TwitterController();
 		}
 		return instance;
@@ -74,6 +71,10 @@ public class TwitterController implements Serializable {
 				.setOAuthAccessTokenSecret(TWITTER_ACCESS_TOKEN_SECRET);
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		twitter = tf.getInstance();
+	}
+	
+	public Twitter getTwitter(){
+		return this.twitter;
 	}
 
 	public void buscaPalavraChave(String pesquisa) {
@@ -239,8 +240,7 @@ public class TwitterController implements Serializable {
 		String result = "";
 
 		try {
-			List<Status> cincoUltimosTweets;
-			cincoUltimosTweets = twitter.getUserTimeline(idUsuario);
+			List<Status> cincoUltimosTweets = twitter.getUserTimeline(idUsuario);
 
 			for (i = 0; i < 5; i++) {
 				result += " -> "
@@ -251,13 +251,13 @@ public class TwitterController implements Serializable {
 				result = "Nenhum tweet recente.\n";
 			}
 		} catch (TwitterException ex) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			ex.printStackTrace(pw);
-			String stackTrace = sw.toString();
-			result = stackTrace;
-			// result =
-			// "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
+//			StringWriter sw = new StringWriter();
+//			PrintWriter pw = new PrintWriter(sw);
+//			ex.printStackTrace(pw);
+//			String stackTrace = sw.toString();
+//			result = result + stackTrace;
+			 result =
+			 "Falha ao buscar dados do twitter, motivo: consutas excessivas, aguarde alguns instantes e tente novamente.\n";
 		}
 		return result;
 	}
@@ -271,15 +271,17 @@ public class TwitterController implements Serializable {
 
 		try {
 			Query query = new Query(pesquisa);
-			QueryResult result;
-			jpvmEnvironment jpvm = new jpvmEnvironment();
-			jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
-			jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
-					NUM_WORKERS, tids);
-			for (int i = 0; i < NUM_WORKERS; i++)
-				System.out.println("\t" + tids[i].toString());
+			QueryResult result;			
 
 			do {
+				
+				jpvmEnvironment jpvm = new jpvmEnvironment();
+				jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
+				jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
+						NUM_WORKERS, tids);
+//				for (int i = 0; i < NUM_WORKERS; i++)
+//					System.out.println("\t" + tids[i].toString());
+				
 				result = twitter.search(query);
 				List<Status> tweets = result.getTweets();
 				Map<Long, Tweet> tweetsRecebidos = new HashMap<Long, Tweet>();
@@ -323,7 +325,7 @@ public class TwitterController implements Serializable {
 						}
 					}
 
-					break;
+//					break;
 				}
 			} while ((query = result.nextQuery()) != null);
 

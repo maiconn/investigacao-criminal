@@ -16,6 +16,7 @@ import br.org.furb.sic.util.FileUtil;
 import br.org.furb.sic.util.SerialUtil;
 
 public class Escravo {
+	
 	public static void main(String[] args) {
 
 		jpvmEnvironment jpvm = null;
@@ -44,9 +45,9 @@ public class Escravo {
 				jpvm.pvm_send(buf, jpvm.pvm_parent(),
 						Tag.RECEBER_BUSCA_FACEBOOK.ordinal());
 				break;
-			case ENVIAR_BUSCA_TWEETS:
+			case ENVIAR_BUSCA_TWEETS:				
 				String cincoUltimosTweets = tweet.getTwitterController()
-						.cincoUltimosTweetsUsuario(tweet.getTweet().getId());
+						.cincoUltimosTweetsUsuario(tweet.getTweet().getUser().getId());
 
 				buf.pack(tweet.getTweet().getId());
 				buf.pack(cincoUltimosTweets);

@@ -72,8 +72,7 @@ public class Tweet implements Serializable {
 		str.append(sdf.format(tweet.getCreatedAt()) + " - " + tweet.getText()
 				+ "\n");
 		str.append("==== ULTIMOS 5 TWEETS ====\n");
-		str.append(listaCincoUltimosTweets);
-		str.append("==== POSSÍVEIS PERFIS FACEBOOK ====\n");
+		str.append(listaCincoUltimosTweets);		
 		str.append(listaPossiveisPerfisFacebook + "\n");
 
 		return str.toString();

@@ -31,7 +31,7 @@ public class FacebookController {
 				.setOAuthAppSecret("5656c9ece88d88110d79796bb82b174a")
 				// Trocar chave de acesso abaixo
 				.setOAuthAccessToken(
-						"CAAJiEGjwJ0IBAIzcRZBgeH2X4D4Roy7ViDe9pIjbUpYMB3gv091YgjXpjP9utizJgMa6AHT4Pi70p7ZBePsi2aZCSeZCV6UXb1QsZBWi2VN0cFQUH8Gi95qh8q4ptCyDsssZCZAJAghvvd0SheEkxgAboqZA89ABCEJm5HEv6LsyCS22q21fQYBYIBSNtP5RaeYZD")
+						"CAAJiEGjwJ0IBAPhKbbzxGW2xCz7ZBzMBaZB05h5hXZAhPod1PkYIZAvN2KNm3CnGAgEGTYtsCW6WJvcivFZBynTXwQCPxhcul1ZAnyQvVlysf3iLnqGo5GtUJ5AEcqF6SO0WK34nZBBzzNulmoITpILX8DRej9xg9E4hqaeF6fzznBC4ZBLs7gP9PZCShvUH3KvcZD")
 				.setOAuthPermissions("email,publish_stream,...");
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		facebook = ff.getInstance();
