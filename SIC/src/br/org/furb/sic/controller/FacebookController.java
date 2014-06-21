@@ -1,8 +1,5 @@
 package br.org.furb.sic.controller;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import br.org.furb.sic.util.StringUtil;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -31,7 +28,7 @@ public class FacebookController {
 				.setOAuthAppSecret("5656c9ece88d88110d79796bb82b174a")
 				// Trocar chave de acesso abaixo
 				.setOAuthAccessToken(
-						"CAAJiEGjwJ0IBAPhKbbzxGW2xCz7ZBzMBaZB05h5hXZAhPod1PkYIZAvN2KNm3CnGAgEGTYtsCW6WJvcivFZBynTXwQCPxhcul1ZAnyQvVlysf3iLnqGo5GtUJ5AEcqF6SO0WK34nZBBzzNulmoITpILX8DRej9xg9E4hqaeF6fzznBC4ZBLs7gP9PZCShvUH3KvcZD")
+						"CAAJiEGjwJ0IBAC8behlicSXTUQBDp48HhRrYSoeQWYEPaOOJYQj7euAqMzAmlNXimcOf14ZAzBzQmTxcEZCaSppbesAjiBmOA3SUigG6vI14unzqzsoiDzLK159XgZBZBDUE8JrnWNPnDFBkhnpH55cRcWFRzCtmFOB9ZBB3KJ1Q2dZAfCShRvsy4T3tbeZCQ4ZD")
 				.setOAuthPermissions("email,publish_stream,...");
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		facebook = ff.getInstance();
@@ -59,12 +56,12 @@ public class FacebookController {
 						+ result.get(i).getName() + "\n";
 			}
 		} catch (FacebookException e) {
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			String stackTrace = sw.toString();
-			perfis = stackTrace;
-//			perfis = "====== Token de acesso do Facebook expirado ======\n";
+//			StringWriter sw = new StringWriter();
+//			PrintWriter pw = new PrintWriter(sw);
+//			e.printStackTrace(pw);
+//			String stackTrace = sw.toString();
+//			perfis = stackTrace;
+			perfis = "====== Token de acesso do Facebook expirado ======\n";
 		}
 		return perfis;
 
