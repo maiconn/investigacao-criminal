@@ -91,6 +91,12 @@ public class Escravo {
 			} catch (jpvmException e1) {
 				logStackTraceTrowable(e1);
 			}
+		} finally{
+			try {
+				jpvm.pvm_exit();
+			} catch (jpvmException e) {
+				logStackTraceTrowable(e);
+			}
 		}
 	}
 

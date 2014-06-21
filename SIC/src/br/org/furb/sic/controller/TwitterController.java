@@ -271,11 +271,6 @@ public class TwitterController implements Serializable {
 			QueryResult result;			
 
 			do {
-				
-				
-//				for (int i = 0; i < NUM_WORKERS; i++)
-//					System.out.println("\t" + tids[i].toString());
-				
 				result = twitter.search(query);
 				
 				List<Status> tweets = result.getTweets();
@@ -286,6 +281,8 @@ public class TwitterController implements Serializable {
 				jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
 				jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
 						NUM_WORKERS, tids);
+//				for (int i = 0; i < NUM_WORKERS; i++)
+//					System.out.println("\t" + tids[i].toString());
 				
 				Map<Long, Tweet> tweetsRecebidos = new HashMap<Long, Tweet>();
 				if (tweets.size() > 0) {
