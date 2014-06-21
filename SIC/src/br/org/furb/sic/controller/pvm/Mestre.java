@@ -55,8 +55,6 @@ public class Mestre {
 		default:
 			throw new JpvmException("Tag inválida ao receber: " + tag.name());
 		}
-		tweetsRecebidos.put(tweetId, tweet);
-		
-		jpvm.pvm_exit();
+		tweetsRecebidos.put(tweetId, tweet);		
 	}
 }
