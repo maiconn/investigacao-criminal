@@ -1,8 +1,6 @@
 package br.org.furb.sic.controller;
 
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +38,6 @@ public class TwitterController implements Serializable {
 	private final int TWEETS_TIME_LINE = 5;
 	private Twitter twitter;
 	private static TwitterController instance;
-	private final int NUM_WORKERS = 45;
 
 	private List<String> palavrasChave;
 
@@ -275,15 +272,21 @@ public class TwitterController implements Serializable {
 
 			do {
 				
-				jpvmEnvironment jpvm = new jpvmEnvironment();
-				jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
-				jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
-						NUM_WORKERS, tids);
+				
 //				for (int i = 0; i < NUM_WORKERS; i++)
 //					System.out.println("\t" + tids[i].toString());
 				
 				result = twitter.search(query);
+				
 				List<Status> tweets = result.getTweets();
+				
+				int NUM_WORKERS = tweets.size()*3;
+				
+				jpvmEnvironment jpvm = new jpvmEnvironment();
+				jpvmTaskId tids[] = new jpvmTaskId[NUM_WORKERS];
+				jpvm.pvm_spawn("br.org.furb.sic.controller.pvm.Escravo",
+						NUM_WORKERS, tids);
+				
 				Map<Long, Tweet> tweetsRecebidos = new HashMap<Long, Tweet>();
 				if (tweets.size() > 0) {
 
